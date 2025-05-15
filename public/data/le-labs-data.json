@@ -1,0 +1,215 @@
+{
+  "meta": {
+    "lastUpdated": "2025-04-12T08:00:00Z",
+    "version": "1.0.0"
+  },
+  "projects": [
+    {
+      "id": "project-001",
+      "title": "Spatial Computing Interface",
+      "slug": "spatial-computing-interface",
+      "status": "active",
+      "featured": true,
+      "hash": "a1b2c3d4e5",
+      "description": "Research into next-generation spatial computing interfaces for creative workflows.",
+      "summary": "How might we reimagine creative tools for spatial computing environments? This research explores natural gestures and spatial organization for digital creation.",
+      "tags": ["spatial", "interface", "creative-tools", "gestural"],
+      "lastUpdated": "2025-04-10T16:42:00Z",
+      "image": "https://images.pexels.com/photos/3861969/pexels-photo-3861969.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+      "tileStyles": {
+        "background": "#23468C",
+        "color": "#FFFFFF",
+        "size": "large"
+      },
+      "updates": [
+        {
+          "hash": "upd-001-a1b2c3",
+          "date": "2025-04-10T16:42:00Z",
+          "title": "Prototype Testing Results",
+          "content": "First round of user testing complete with 87% positive feedback on natural gesture recognition system."
+        },
+        {
+          "hash": "upd-001-f6g7h8",
+          "date": "2025-04-05T09:15:00Z",
+          "title": "Development Milestone",
+          "content": "Core gesture recognition system now achieves 95% accuracy in controlled environments."
+        }
+      ],
+      "links": {
+        "github": "https://github.com/P2Enjoy/spatial-computing",
+        "license": "https://opensource.org/licenses/MIT",
+        "demo": "https://demo.lelabs.example/spatial-interface",
+        "video": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+        "documentation": "https://docs.lelabs.example/spatial-computing"
+      }
+    },
+    {
+      "id": "project-002",
+      "title": "Neural Audio Generation",
+      "slug": "neural-audio-generation",
+      "status": "active",
+      "featured": true,
+      "hash": "f6g7h8i9j0",
+      "description": "AI-powered audio generation with focus on professional sound design applications.",
+      "summary": "Exploring the intersection of machine learning and audio production to create new tools for sound designers and musicians.",
+      "tags": ["audio", "AI", "generative", "sound-design"],
+      "lastUpdated": "2025-04-08T11:30:00Z",
+      "image": "https://images.pexels.com/photos/164745/pexels-photo-164745.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+      "tileStyles": {
+        "background": "#238C33",
+        "color": "#FFFFFF",
+        "size": "medium"
+      },
+      "updates": [
+        {
+          "hash": "upd-002-k4l5m6",
+          "date": "2025-04-08T11:30:00Z",
+          "title": "New Training Dataset",
+          "content": "Expanded training data with 10,000 professional sound design samples for improved stylistic control."
+        }
+      ],
+      "links": {
+        "github": "https://github.com/P2Enjoy/neural-audio",
+        "license": "https://opensource.org/licenses/Apache-2.0",
+        "demo": "https://audio.lelabs.example",
+        "video": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+        "documentation": "https://docs.lelabs.example/neural-audio"
+      }
+    },
+    {
+      "id": "project-003",
+      "title": "Adaptive Color Systems",
+      "slug": "adaptive-color-systems",
+      "status": "completed",
+      "featured": false,
+      "hash": "k1l2m3n4o5",
+      "description": "Research on dynamic color systems that respond to environmental and user contexts.",
+      "summary": "Can color systems adapt intelligently to user needs and environmental factors? This project explores dynamic color palettes for digital interfaces.",
+      "tags": ["color", "accessibility", "adaptive", "design-systems"],
+      "lastUpdated": "2025-03-15T14:20:00Z",
+      "image": "https://images.pexels.com/photos/1209843/pexels-photo-1209843.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+      "tileStyles": {
+        "background": "#D9CF4A",
+        "color": "#0D0D0D",
+        "size": "medium"
+      },
+      "updates": [
+        {
+          "hash": "upd-003-p7q8r9",
+          "date": "2025-03-15T14:20:00Z",
+          "title": "Project Completion",
+          "content": "Final report published with findings on environmental color adaptation. Source code released as open-source library."
+        }
+      ],
+      "links": {
+        "github": "https://github.com/P2Enjoy/adaptive-color",
+        "license": "https://opensource.org/licenses/GPL-3.0",
+        "demo": "https://colors.lelabs.example",
+        "video": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+        "documentation": "https://docs.lelabs.example/adaptive-color"
+      }
+    },
+    {
+      "id": "project-004",
+      "title": "Haptic Information Design",
+      "slug": "haptic-information-design",
+      "status": "planning",
+      "featured": false,
+      "hash": "p6q7r8s9t0",
+      "description": "Exploring haptic feedback for communicating complex information structures.",
+      "summary": "How can we use touch and haptic feedback to convey complex information? This research explores new methods for tactile data representation.",
+      "tags": ["haptic", "accessibility", "information-design", "physical"],
+      "lastUpdated": "2025-04-01T09:45:00Z",
+      "image": "https://images.pexels.com/photos/1109541/pexels-photo-1109541.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+      "tileStyles": {
+        "background": "#F24141",
+        "color": "#FFFFFF",
+        "size": "small"
+      },
+      "updates": [
+        {
+          "hash": "upd-004-u1v2w3",
+          "date": "2025-04-01T09:45:00Z",
+          "title": "Research Plan Approved",
+          "content": "Project plan and initial research methodology approved. Initial prototype development to begin next week."
+        }
+      ],
+      "links": {
+        "github": "https://github.com/P2Enjoy/haptic-info",
+        "license": "https://opensource.org/licenses/MIT",
+        "documentation": "https://docs.lelabs.example/haptic-design"
+      }
+    }
+  ],
+  "pages": {
+    "home": {
+      "title": "LE LABS",
+      "subtitle": "Laboratory About Business Solutions",
+      "description": "The R&D department of P2Enjoy Studio, exploring creative technologies and their business applications.",
+      "layout": [
+        {
+          "type": "hero",
+          "content": {
+            "heading": "Exploring Tomorrow's Creative Technology",
+            "subheading": "Research & Development at P2Enjoy Studio",
+            "cta": "View Our Projects"
+          },
+          "styles": {
+            "background": "#23468C",
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "type": "featured-projects",
+          "content": {
+            "heading": "Featured Research",
+            "description": "Current initiatives exploring the future of creative technology."
+          }
+        },
+        {
+          "type": "news-grid",
+          "content": {
+            "heading": "Latest Updates",
+            "description": "News and developments from our lab."
+          }
+        },
+        {
+          "type": "cta-block",
+          "content": {
+            "heading": "Join Our Research",
+            "description": "Interested in collaborating on a project? Contact us to discuss possibilities.",
+            "buttonText": "Start a Conversation",
+            "buttonLink": "/contact"
+          },
+          "styles": {
+            "background": "#238C33",
+            "color": "#FFFFFF"
+          }
+        }
+      ]
+    },
+    "methodology": {
+      "title": "Our Methodology",
+      "description": "How we approach research and development at LE LABS.",
+      "content": [
+        {
+          "heading": "Research Philosophy",
+          "text": "We believe in human-centered design combined with rigorous technical exploration. Our process starts with identifying unmet needs in creative workflows and technology gaps that could address them."
+        },
+        {
+          "heading": "Our Process",
+          "text": "1. Define research questions based on industry needs\n2. Explore technical possibilities and constraints\n3. Develop proof-of-concept prototypes\n4. Test with real users in authentic contexts\n5. Refine based on feedback and insights\n6. Transition promising research to production development"
+        },
+        {
+          "heading": "Open Research",
+          "text": "We're committed to sharing our findings with the broader community. When possible, we publish research papers, open-source code, and host knowledge-sharing events."
+        }
+      ]
+    },
+    "about": {
+      "title": "About LE LABS",
+      "description": "The research and development department of P2Enjoy Studio.",
+      "content": "LE LABS (Laboratory About Business Solutions) is the dedicated R&D department of P2Enjoy Studio, focused on exploring emerging technologies and their applications for creative professionals. Established in 2023, our team of researchers, designers, and engineers work at the intersection of technology and creativity.\n\nOur mission is to identify, explore, and develop new tools and methodologies that expand creative possibilities while solving real business challenges. We believe that technological innovation should serve human creativity, not replace it.\n\nAt LE LABS, we maintain a balance between speculative research that looks years ahead and practical innovations that can benefit creative professionals today."
+    }
+  }
+}
