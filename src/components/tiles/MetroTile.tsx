@@ -153,13 +153,33 @@ const MetroTile: React.FC<MetroTileProps> = ({
   
   // Determine a random transition type when component mounts
   useEffect(() => {
-    const transitions: TransitionType[] = [
-      'fade', 'slide', 'scale', 'kaleidoscope', 'rainbow', 
-      'obturator', 'slidingDoors', 'zoom', 'flip'
+    if (reducedMotion) {
+      setTransitionType('fade');
+      return;
+    }
+    
+    // Fixed: Exclude potentially problematic transition types for first tile
+    // This prevents the obturator effect from causing excessive zoom
+    const safeTransitions: TransitionType[] = [
+      'fade', 'slide', 'scale', 'zoom', 'flip'
     ];
-    const randomIndex = Math.floor(Math.random() * transitions.length);
-    setTransitionType(reducedMotion ? 'fade' : transitions[randomIndex]);
-  }, [reducedMotion]);
+    
+    // For other tiles, use the full range of transitions
+    const allTransitions: TransitionType[] = [
+      ...safeTransitions,
+      'kaleidoscope', 'rainbow', 'obturator', 'slidingDoors'
+    ];
+    
+    // Use a unique property (like title or tileStyles) to determine if this is the first tile
+    // First tile typically has a specific background color or is featured
+    const isFirstTile = tileStyles.size === 'large' && tileStyles.background === '#23468C';
+    
+    // Choose from safe transitions for the first tile, all transitions for others
+    const availableTransitions = isFirstTile ? safeTransitions : allTransitions;
+    
+    const randomIndex = Math.floor(Math.random() * availableTransitions.length);
+    setTransitionType(availableTransitions[randomIndex]);
+  }, [reducedMotion, tileStyles]);
   
   // Handle tile click (excluding the flip button click)
   const handleTileClick = (e: React.MouseEvent) => {
@@ -231,7 +251,7 @@ const MetroTile: React.FC<MetroTileProps> = ({
     // Base animation for hover and tap - FIXED: reduced hover scale to prevent excessive growth
     const hoverTapAnimations = {
       hover: { 
-        scale: 1.02, // Reduced from 1.03 to prevent tiles from getting too large
+        scale: transitionType === 'obturator' ? 1.01 : 1.02, // Even smaller scale for obturator transition
         transition: { duration: 0.3 }
       },
       tap: { 
@@ -335,7 +355,15 @@ const MetroTile: React.FC<MetroTileProps> = ({
               opacity: { duration: 0.5 }
             }
           },
-          ...hoverTapAnimations
+          // Fixed: Custom hover animation for obturator to limit scale
+          hover: {
+            scale: 1.01, // Much smaller scale for obturator effect
+            transition: { duration: 0.3 }
+          },
+          tap: { 
+            scale: 0.98,
+            transition: { duration: 0.1 }
+          }
         };
       case 'slidingDoors':
         return {
