@@ -228,10 +228,10 @@ const MetroTile: React.FC<MetroTileProps> = ({
   
   // Get transition-specific animation variants
   const getVariants = () => {
-    // Base animation for hover and tap
+    // Base animation for hover and tap - FIXED: reduced hover scale to prevent excessive growth
     const hoverTapAnimations = {
       hover: { 
-        scale: 1.03,
+        scale: 1.02, // Reduced from 1.03 to prevent tiles from getting too large
         transition: { duration: 0.3 }
       },
       tap: { 
