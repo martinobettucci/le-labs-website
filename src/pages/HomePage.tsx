@@ -40,6 +40,39 @@ const HomePage: React.FC = () => {
     return project.updates.some(update => new Date(update.date) > lastChecked);
   };
 
+  // Generate layout pattern for featured projects
+  const generateLayoutPattern = (projects) => {
+    // Create interesting layout patterns for homepage
+    return projects.map((project, index) => {
+      let colSpan;
+      
+      // Use index to create varied but balanced layouts
+      if (index === 0) {
+        // First project gets full width attention
+        colSpan = 12;
+      } else if (projects.length <= 3) {
+        // For small project counts, distribute evenly
+        colSpan = 12 / projects.length;
+      } else {
+        // For more projects, create a more varied grid
+        const position = index % 5;
+        
+        if (position === 1) colSpan = 7;
+        else if (position === 2) colSpan = 5;
+        else if (position === 3) colSpan = 8;
+        else if (position === 4) colSpan = 4;
+        else colSpan = 6;
+      }
+      
+      return {
+        ...project,
+        colSpan
+      };
+    });
+  };
+
+  const layoutProjects = generateLayoutPattern(featuredProjects);
+
   // Animation variants
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -89,7 +122,7 @@ const HomePage: React.FC = () => {
         </div>
       </motion.section>
       
-      {/* Featured Projects - Modified to use grid for wider tiles */}
+      {/* Featured Projects - Dynamic grid layout */}
       <section className="py-16 bg-background">
         <div className="container mx-auto px-4 md:px-6">
           <motion.div 
@@ -103,20 +136,16 @@ const HomePage: React.FC = () => {
           </motion.div>
           
           <motion.div 
-            className="grid grid-cols-1 md:grid-cols-12 gap-6 auto-rows-auto"
+            className="grid grid-cols-1 md:grid-cols-12 gap-6"
             variants={containerVariants}
             initial="hidden"
             animate="visible"
           >
-            {featuredProjects.map((project, index) => (
+            {layoutProjects.map(project => (
               <motion.div 
                 key={project.id} 
                 variants={itemVariants}
-                className={`${
-                  // Apply dynamic grid column spans for layout variation
-                  index % 3 === 0 ? 'md:col-span-7' : 
-                  index % 3 === 1 ? 'md:col-span-5' : 'md:col-span-12'
-                }`}
+                className={`md:col-span-${project.colSpan}`}
               >
                 <ProjectTile 
                   project={project} 

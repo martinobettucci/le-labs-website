@@ -106,6 +106,46 @@ const MethodologyPage: React.FC = () => {
     }
   ];
   
+  // Generate dynamic layout pattern
+  const generateDynamicLayout = (tiles) => {
+    return tiles.map((tile, index) => {
+      let colSpan;
+      
+      // Create dynamic layout patterns based on position
+      const position = index % 12;
+      
+      if (position === 0) {
+        // First tile gets more attention
+        colSpan = 8;
+      } else if (position === 1) {
+        // Pair with the first tile
+        colSpan = 4;
+      } else if (position === 2) {
+        // Full width highlight
+        colSpan = 12;
+      } else if (position === 3 || position === 4 || position === 5) {
+        // Three medium items in a row
+        colSpan = 4;
+      } else if (position === 6) {
+        // Large highlight
+        colSpan = 7;
+      } else if (position === 7) {
+        // Paired with large
+        colSpan = 5;
+      } else if (position === 8 || position === 9 || position === 10 || position === 11) {
+        // Small items in a row
+        colSpan = 3;
+      }
+      
+      return {
+        ...tile,
+        colSpan
+      };
+    });
+  };
+  
+  const dynamicTiles = generateDynamicLayout(methodologyTiles);
+  
   // Render bullet points content for each tile
   const renderBulletPoints = (points: string[]) => (
     <div className="space-y-2">
@@ -170,13 +210,13 @@ const MethodologyPage: React.FC = () => {
             <h2 className="font-heading text-2xl mb-8 text-white text-center">Our Methodology Stages</h2>
             
             <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
-              {methodologyTiles.map((tile, index) => (
+              {dynamicTiles.map((tile, index) => (
                 <motion.div
                   key={index}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: 0.1 + index * 0.1 }}
-                  className={`md:col-span-${index % 3 === 0 ? '8' : index % 3 === 1 ? '4' : '6'}`}
+                  className={`md:col-span-${tile.colSpan}`}
                 >
                   <MetroTile
                     title={tile.title}
