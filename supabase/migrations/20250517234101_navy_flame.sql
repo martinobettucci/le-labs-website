@@ -17,17 +17,6 @@ SET tile_styles = jsonb_build_object(
   'color', CASE id
     WHEN 'project-003' THEN '#0D0D0D'  -- Dark text for yellow background
     ELSE '#FFFFFF'                      -- White text for all others
-  END,
-  'size', CASE 
-    -- Randomize sizes for more variety
-    WHEN id = 'project-001' THEN (ARRAY['medium', 'large'])[floor(random()*2+1)]
-    WHEN id = 'project-002' THEN (ARRAY['small', 'medium'])[floor(random()*2+1)]
-    WHEN id = 'project-004' THEN (ARRAY['small', 'medium'])[floor(random()*2+1)]
-    WHEN id = 'project-005' THEN (ARRAY['medium', 'large'])[floor(random()*2+1)]
-    WHEN id = 'project-006' THEN (ARRAY['small', 'medium'])[floor(random()*2+1)]
-    WHEN id = 'project-008' THEN (ARRAY['medium', 'large'])[floor(random()*2+1)]
-    WHEN id = 'project-009' THEN (ARRAY['small', 'medium'])[floor(random()*2+1)]
-    ELSE tile_styles->>'size'
   END
 );
 
