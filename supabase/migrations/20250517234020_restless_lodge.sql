@@ -18,8 +18,7 @@ INSERT INTO le_labs_project (
   'https://images.pexels.com/photos/669615/pexels-photo-669615.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
   jsonb_build_object(
     'background', '#8C2387',
-    'color', '#FFFFFF',
-    'size', 'medium'
+    'color', '#FFFFFF'
   ),
   jsonb_build_object(
     'github', 'https://github.com/P2Enjoy/quantum-viz',
@@ -52,8 +51,7 @@ INSERT INTO le_labs_project (
   'https://images.pexels.com/photos/3760809/pexels-photo-3760809.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
   jsonb_build_object(
     'background', '#478C4D',
-    'color', '#FFFFFF',
-    'size', 'small'
+    'color', '#FFFFFF'
   ),
   jsonb_build_object(
     'github', 'https://github.com/P2Enjoy/biometric-art',
@@ -86,8 +84,7 @@ INSERT INTO le_labs_project (
   'https://images.pexels.com/photos/3846106/pexels-photo-3846106.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
   jsonb_build_object(
     'background', '#3B8C77',
-    'color', '#FFFFFF',
-    'size', 'small'
+    'color', '#FFFFFF'
   ),
   jsonb_build_object(
     'github', 'https://github.com/P2Enjoy/sustainable-mfg',
@@ -119,8 +116,7 @@ INSERT INTO le_labs_project (
   'https://images.pexels.com/photos/2599244/pexels-photo-2599244.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
   jsonb_build_object(
     'background', '#8C5223',
-    'color', '#FFFFFF',
-    'size', 'large'
+    'color', '#FFFFFF'
   ),
   jsonb_build_object(
     'github', 'https://github.com/P2Enjoy/immersive-learning',
@@ -160,8 +156,7 @@ INSERT INTO le_labs_project (
   'https://images.pexels.com/photos/1714208/pexels-photo-1714208.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
   jsonb_build_object(
     'background', '#8C3D23',
-    'color', '#FFFFFF',
-    'size', 'medium'
+    'color', '#FFFFFF'
   ),
   jsonb_build_object(
     'github', 'https://github.com/P2Enjoy/tactile-programming',
@@ -194,8 +189,7 @@ INSERT INTO le_labs_project (
   'https://images.pexels.com/photos/3183186/pexels-photo-3183186.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
   jsonb_build_object(
     'background', '#23788C',
-    'color', '#FFFFFF',
-    'size', 'medium'
+    'color', '#FFFFFF'
   ),
   jsonb_build_object(
     'github', 'https://github.com/P2Enjoy/collaborative-decisions',
