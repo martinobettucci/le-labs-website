@@ -40,8 +40,7 @@ INSERT INTO le_labs_project (
   'https://images.pexels.com/photos/1571460/pexels-photo-1571460.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
   jsonb_build_object(
     'background', '#4A23B5',
-    'color', '#FFFFFF',
-    'size', 'medium'
+    'color', '#FFFFFF'
   ),
   jsonb_build_object(
     'github', 'https://github.com/P2Enjoy/ambient-interfaces',
@@ -73,8 +72,7 @@ INSERT INTO le_labs_project (
   'https://images.pexels.com/photos/3184639/pexels-photo-3184639.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
   jsonb_build_object(
     'background', '#8C234B',
-    'color', '#FFFFFF',
-    'size', 'large'
+    'color', '#FFFFFF'
   ),
   jsonb_build_object(
     'github', 'https://github.com/P2Enjoy/procedural-narrative',
@@ -113,8 +111,7 @@ INSERT INTO le_labs_project (
   'https://images.pexels.com/photos/7242859/pexels-photo-7242859.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
   jsonb_build_object(
     'background', '#238C8C',
-    'color', '#FFFFFF',
-    'size', 'medium'
+    'color', '#FFFFFF'
   ),
   jsonb_build_object(
     'github', 'https://github.com/P2Enjoy/cross-modal',
@@ -147,8 +144,7 @@ INSERT INTO le_labs_project (
   'https://images.pexels.com/photos/2041540/pexels-photo-2041540.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
   jsonb_build_object(
     'background', '#2A568C',
-    'color', '#FFFFFF',
-    'size', 'small'
+    'color', '#FFFFFF'
   ),
   jsonb_build_object(
     'github', 'https://github.com/P2Enjoy/decentralized-knowledge',
@@ -180,8 +176,7 @@ INSERT INTO le_labs_project (
   'https://images.pexels.com/photos/3861457/pexels-photo-3861457.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
   jsonb_build_object(
     'background', '#8C6D23',
-    'color', '#FFFFFF',
-    'size', 'large'
+    'color', '#FFFFFF'
   ),
   jsonb_build_object(
     'github', 'https://github.com/P2Enjoy/biocompatible-electronics',
