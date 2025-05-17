@@ -158,25 +158,10 @@ const MetroTile: React.FC<MetroTileProps> = ({
       return;
     }
     
-    // Fixed: Exclude potentially problematic transition types for first tile
-    // This prevents the obturator effect from causing excessive zoom
-    const safeTransitions: TransitionType[] = [
-      'fade', 'slide', 'scale', 'zoom', 'flip'
+    const availableTransitions: TransitionType[] = [
+      'fade', 'slide', 'scale', 'zoom', 'flip', 'kaleidoscope', 'rainbow', 'obturator', 'slidingDoors'
     ];
-    
-    // For other tiles, use the full range of transitions
-    const allTransitions: TransitionType[] = [
-      ...safeTransitions,
-      'kaleidoscope', 'rainbow', 'obturator', 'slidingDoors'
-    ];
-    
-    // Use a unique property (like title or tileStyles) to determine if this is the first tile
-    // First tile typically has a specific background color or is featured
-    const isFirstTile = tileStyles.size === 'large' && tileStyles.background === '#23468C';
-    
-    // Choose from safe transitions for the first tile, all transitions for others
-    const availableTransitions = isFirstTile ? safeTransitions : allTransitions;
-    
+        
     const randomIndex = Math.floor(Math.random() * availableTransitions.length);
     setTransitionType(availableTransitions[randomIndex]);
   }, [reducedMotion, tileStyles]);
