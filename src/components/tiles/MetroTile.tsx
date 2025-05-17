@@ -189,13 +189,13 @@ const MetroTile: React.FC<MetroTileProps> = ({
       return;
     }
     
-    // If the tile is showing details and has a link, let the link work
-    if (currentFace === 'details' && to) {
+    // If the tile is showing details or image and has a link, let the link work
+    if ((currentFace === 'details' || currentFace === 'image') && to) {
       // Let default link behavior work
       return;
     }
     
-    // For other states, prevent default and handle rotation
+    // For other states (links face), prevent default and handle rotation
     e.preventDefault();
   };
   
@@ -595,8 +595,8 @@ const MetroTile: React.FC<MetroTileProps> = ({
     );
   };
   
-  // If in details face and has a link, wrap in Link component
-  if (to && currentFace === 'details') {
+  // If in details face or image face and has a link, wrap in Link component
+  if (to && (currentFace === 'details' || currentFace === 'image')) {
     return <Link to={to}>{renderTileContent()}</Link>;
   }
   
