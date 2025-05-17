@@ -31,8 +31,7 @@ INSERT INTO le_labs_project (
   'https://images.pexels.com/photos/3861969/pexels-photo-3861969.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
   jsonb_build_object(
     'background', '#23468C',
-    'color', '#FFFFFF',
-    'size', 'large'
+    'color', '#FFFFFF'
   ),
   jsonb_build_object(
     'github', 'https://github.com/P2Enjoy/spatial-computing',
@@ -72,8 +71,7 @@ INSERT INTO le_labs_project (
   'https://images.pexels.com/photos/164745/pexels-photo-164745.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
   jsonb_build_object(
     'background', '#238C33',
-    'color', '#FFFFFF',
-    'size', 'medium'
+    'color', '#FFFFFF'
   ),
   jsonb_build_object(
     'github', 'https://github.com/P2Enjoy/neural-audio',
@@ -107,8 +105,7 @@ INSERT INTO le_labs_project (
   'https://images.pexels.com/photos/1209843/pexels-photo-1209843.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
   jsonb_build_object(
     'background', '#D9CF4A',
-    'color', '#0D0D0D',
-    'size', 'medium'
+    'color', '#0D0D0D'
   ),
   jsonb_build_object(
     'github', 'https://github.com/P2Enjoy/adaptive-color',
@@ -142,8 +139,7 @@ INSERT INTO le_labs_project (
   'https://images.pexels.com/photos/1109541/pexels-photo-1109541.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
   jsonb_build_object(
     'background', '#F24141',
-    'color', '#FFFFFF',
-    'size', 'small'
+    'color', '#FFFFFF'
   ),
   jsonb_build_object(
     'github', 'https://github.com/P2Enjoy/haptic-info',
