@@ -45,8 +45,23 @@ const MetroTile: React.FC<MetroTileProps> = ({
   const imageRef = useRef<HTMLImageElement>(null);
   const flipButtonRef = useRef<HTMLButtonElement>(null);
   
-  // Initial face is details by default
-  const [currentFace, setCurrentFace] = useState<FaceType>('details');
+  // Determine which faces are available
+  const availableFaces: FaceType[] = ['details'];
+  if (image) availableFaces.push('image');
+  if (links) availableFaces.push('links');
+  
+  // Select a random initial face from available options
+  const getRandomInitialFace = (): FaceType => {
+    // If there's only one face available, use that
+    if (availableFaces.length === 1) return 'details';
+    
+    // Otherwise, randomly select one of the available faces
+    const randomIndex = Math.floor(Math.random() * availableFaces.length);
+    return availableFaces[randomIndex];
+  };
+  
+  // Initialize with a random face
+  const [currentFace, setCurrentFace] = useState<FaceType>(getRandomInitialFace());
   const [ambientColor, setAmbientColor] = useState<string>(tileStyles.background);
   
   // Update ambient color based on current face content
@@ -119,7 +134,7 @@ const MetroTile: React.FC<MetroTileProps> = ({
   
   // Periodically rotate tile if it has multiple faces
   useEffect(() => {
-    if ((!image && !links) || reducedMotion) return;
+    if (availableFaces.length <= 1 || reducedMotion) return;
     
     // Random interval between 15-30 seconds
     const flipInterval = Math.floor(Math.random() * 15000) + 15000;
@@ -134,7 +149,7 @@ const MetroTile: React.FC<MetroTileProps> = ({
     }, flipInterval);
     
     return () => clearInterval(intervalId);
-  }, [image, links, reducedMotion]);
+  }, [image, links, reducedMotion, availableFaces]);
   
   // Determine a random transition type when component mounts
   useEffect(() => {
