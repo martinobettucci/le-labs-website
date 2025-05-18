@@ -1,7 +1,6 @@
 export interface TileStyles {
-  background: string;
-  color: string;
-  size: 'small' | 'medium' | 'large' | 'wide';
+  background: string;  
+	color: string;
 }
 
 export interface ProjectUpdate {

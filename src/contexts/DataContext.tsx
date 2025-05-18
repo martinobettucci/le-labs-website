@@ -62,8 +62,7 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         image: item.image || '',
         tileStyles: {
           background: item.tile_styles?.background || '#23468C',
-          color: item.tile_styles?.color || '#FFFFFF',
-          size: item.tile_styles?.size || 'medium'
+          color: item.tile_styles?.color || '#FFFFFF'
         },
         updates: item.updates || [],
         links: item.links || {}
