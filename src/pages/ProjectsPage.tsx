@@ -45,21 +45,6 @@ const ProjectsPage: React.FC = () => {
     return ['all', ...new Set(allTags)];
   };
   
-  // Check for new updates in followed projects
-  const hasNewUpdates = (projectId: string) => {
-    if (!isFollowing(projectId)) return false;
-    
-    const project = data.projects.find(p => p.id === projectId);
-    const followedProject = preferences.followedProjects.find(fp => fp.id === projectId);
-    
-    if (!project || !followedProject || !project.updates || project.updates.length === 0) {
-      return false;
-    }
-    
-    const lastChecked = new Date(followedProject.lastChecked);
-    return project.updates.some(update => new Date(update.date) > lastChecked);
-  };
-  
   // Define the repeating pattern of tile sizes
   const tilePatterns = [
     [12],                     // 1 large tile (full row)
@@ -122,6 +107,21 @@ const ProjectsPage: React.FC = () => {
     }
     
     return result;
+  };
+  
+  // Check for new updates in followed projects
+  const hasNewUpdates = (projectId: string) => {
+    if (!isFollowing(projectId)) return false;
+    
+    const project = data.projects.find(p => p.id === projectId);
+    const followedProject = preferences.followedProjects.find(fp => fp.id === projectId);
+    
+    if (!project || !followedProject || !project.updates || project.updates.length === 0) {
+      return false;
+    }
+    
+    const lastChecked = new Date(followedProject.lastChecked);
+    return project.updates.some(update => new Date(update.date) > lastChecked);
   };
   
   if (loading || !data) {
