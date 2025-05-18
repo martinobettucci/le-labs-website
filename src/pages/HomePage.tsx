@@ -151,9 +151,15 @@ const HomePage: React.FC = () => {
               <motion.div 
                 key={project.id} 
                 variants={itemVariants}
-                className={`md:col-span-${project.colSpan}`}
+								className={
+								  project.colSpan === 12 ? 'md:col-span-12' :
+								  project.colSpan === 6 ? 'md:col-span-6' :
+								  project.colSpan === 3 ? 'md:col-span-3' :
+								  'md:col-span-12'
+								}
               >
-                <ProjectTile 
+								<p className="text-white">Featured Projects: </p>
+                <ProjectTile
                   project={project} 
                   hasNewUpdates={hasNewUpdates(project.id)}
                 />

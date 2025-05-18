@@ -16,6 +16,7 @@ interface MetroTileProps {
   backContent?: React.ReactNode; // Content for the back of the tile
   image?: string; // Optional image to show
   links?: React.ReactNode; // Links content to show
+	size?: 'small' | 'medium' | 'large' | 'wide';
   onFlip?: () => void; // New callback for manual flip
 }
 
@@ -36,6 +37,7 @@ const MetroTile: React.FC<MetroTileProps> = ({
   backContent,
   image,
   links,
+	size,
   onFlip
 }) => {
   const { preferences } = useUserPreferences();
@@ -226,11 +228,12 @@ const MetroTile: React.FC<MetroTileProps> = ({
   // Determine tile size class - This is no longer being used for setting the size
   // The size is now determined by the grid layout in the parent component
   const sizeClasses = {
-    small: 'h-40 md:h-48',
-    medium: 'h-60 md:h-68',
-    large: 'h-80 md:h-100',
-    wide: 'h-48 md:h-56 md:col-span-2 lg:col-span-3',
-  };
+		small: 'h-40 md:h-68',
+		medium: 'h-60 md:h-68',
+		large: 'h-80 md:h-100',
+		wide: 'h-48 md:h-56'
+	};
+
   
   // Get transition-specific animation variants
   const getVariants = () => {
@@ -547,7 +550,7 @@ const MetroTile: React.FC<MetroTileProps> = ({
     return (
       <motion.div
         ref={tileRef}
-        className={`metro-tile ambient-light-tile h-full w-full cursor-pointer ${getAnimationClass()} perspective-1000 relative`}
+        className={`metro-tile ambient-light-tile w-full ${sizeClasses[size || 'wide']} cursor-pointer ${getAnimationClass()} perspective-1000 relative`}
         style={{ 
           backgroundColor: tileStyles.background, 
           color: tileStyles.color,
