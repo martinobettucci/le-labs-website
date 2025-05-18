@@ -223,7 +223,8 @@ const MetroTile: React.FC<MetroTileProps> = ({
     }
   };
   
-  // Determine tile size class
+  // Determine tile size class - This is no longer being used for setting the size
+  // The size is now determined by the grid layout in the parent component
   const sizeClasses = {
     small: 'h-40 md:h-48',
     medium: 'h-60 md:h-68',
@@ -546,7 +547,7 @@ const MetroTile: React.FC<MetroTileProps> = ({
     return (
       <motion.div
         ref={tileRef}
-        className={`metro-tile ambient-light-tile ${sizeClasses[tileStyles.size]} w-full cursor-pointer ${getAnimationClass()} perspective-1000 relative`}
+        className={`metro-tile ambient-light-tile h-full w-full cursor-pointer ${getAnimationClass()} perspective-1000 relative`}
         style={{ 
           backgroundColor: tileStyles.background, 
           color: tileStyles.color,

@@ -60,52 +60,68 @@ const ProjectsPage: React.FC = () => {
     return project.updates.some(update => new Date(update.date) > lastChecked);
   };
   
-  // Generate layout pattern for projects
-  const generateLayoutPattern = (projects: any[]) => {
-    // Each project will have a dynamically assigned size
-    return projects.map((project, index) => {
-      // Get a seed based on index to ensure some consistency in randomness
-      const seed = index % 7; // Using modulo 7 to create variety
+  // Define the repeating pattern of tile sizes
+  const tilePatterns = [
+    [12],                     // 1 large tile (full row)
+    [6, 6],                   // 2 medium tiles (half row each)
+    [6, 3, 3],                // 1 medium tile + 2 small tiles
+    [3, 6, 3],                // 1 small tile + 1 medium tile + 1 small tile
+    [3, 3, 6]                 // 2 small tiles + 1 medium tile
+  ];
+  
+  // Function to generate randomized layout pattern
+  const generateLayoutPattern = (projects) => {
+    // Create a randomly shuffled copy of the tile patterns for even more randomness
+    const shuffledPatterns = [...tilePatterns]
+      .sort(() => Math.random() - 0.5);
+    
+    // Apply the pattern to projects
+    const result = [];
+    let patternIndex = 0;
+    let currentRow = [];
+    let currentRowWidth = 0;
+    
+    for (let i = 0; i < projects.length; i++) {
+      const currentPattern = shuffledPatterns[patternIndex % shuffledPatterns.length];
       
-      // Assign column spans based on different patterns to ensure packed rows
-      let colSpan;
-      let pattern = seed;
-      
-      // Every 12 projects, create a pattern that ensures rows are filled
-      const cyclePosition = index % 12;
-      
-      if (cyclePosition === 0) {
-        // Start with a large project (full row)
-        colSpan = 12;
-      } else if (cyclePosition === 1 || cyclePosition === 7) {
-        // 2 medium projects (6+6)
-        colSpan = 6;
-      } else if (cyclePosition === 2 || cyclePosition === 3 || cyclePosition === 4) {
-        // 3 projects (4+4+4)
-        colSpan = 4;
-      } else if (cyclePosition === 5 || cyclePosition === 6 || cyclePosition === 8 || cyclePosition === 9) {
-        // 4 small projects (3+3+3+3)
-        colSpan = 3;
-      } else if (cyclePosition === 10) {
-        // Mixed row: medium + small (8+4)
-        colSpan = 8;
-      } else if (cyclePosition === 11) {
-        // Mixed row: small (continuation of previous)
-        colSpan = 4;
+      // For each pattern, go through its column spans
+      for (let spanIndex = 0; spanIndex < currentPattern.length && i < projects.length; spanIndex++) {
+        const span = currentPattern[spanIndex];
+        
+        // If adding this span would exceed 12 columns, start a new row
+        if (currentRowWidth + span > 12) {
+          // Fill any remaining space with the current tile (if it's small enough)
+          if (12 - currentRowWidth <= 4 && i < projects.length) {
+            result.push({
+              ...projects[i],
+              colSpan: 12 - currentRowWidth
+            });
+            i++;
+          }
+          
+          // Reset row tracking
+          currentRowWidth = 0;
+          patternIndex++;
+        }
+        
+        // Add the current tile with the appropriate span
+        if (i < projects.length) {
+          result.push({
+            ...projects[i],
+            colSpan: span
+          });
+          currentRowWidth += span;
+          
+          // If we've filled a row, increment pattern and reset row width
+          if (currentRowWidth === 12) {
+            currentRowWidth = 0;
+            patternIndex++;
+          }
+        }
       }
-      
-      // Introduce some additional randomness for visual interest
-      // But ensure we maintain our tight packing
-      if (index > 0 && index % 23 === 0) {
-        // Occasionally insert a full-width project
-        colSpan = 12;
-      }
-      
-      return {
-        ...project,
-        colSpan
-      };
-    });
+    }
+    
+    return result;
   };
   
   if (loading || !data) {

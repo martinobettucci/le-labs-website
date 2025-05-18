@@ -106,42 +106,41 @@ const MethodologyPage: React.FC = () => {
     }
   ];
   
-  // Generate dynamic layout pattern
+  // Define the repeating pattern of tile sizes
+  const tilePatterns = [
+    [12],                     // 1 large tile (full row)
+    [6, 6],                   // 2 medium tiles (half row each)
+    [6, 3, 3],                // 1 medium tile + 2 small tiles
+    [3, 6, 3],                // 1 small tile + 1 medium tile + 1 small tile
+    [3, 3, 6]                 // 2 small tiles + 1 medium tile
+  ];
+  
+  // Generate randomized layout for methodology tiles
   const generateDynamicLayout = (tiles) => {
-    return tiles.map((tile, index) => {
-      let colSpan;
+    // Randomize the starting point in the pattern
+    const startPatternIndex = Math.floor(Math.random() * tilePatterns.length);
+    
+    // Apply the pattern to tiles
+    const result = [];
+    let patternIndex = startPatternIndex;
+    let tileIndex = 0;
+    
+    while (tileIndex < tiles.length) {
+      const currentPattern = tilePatterns[patternIndex % tilePatterns.length];
       
-      // Create dynamic layout patterns based on position
-      const position = index % 12;
-      
-      if (position === 0) {
-        // First tile gets more attention
-        colSpan = 8;
-      } else if (position === 1) {
-        // Pair with the first tile
-        colSpan = 4;
-      } else if (position === 2) {
-        // Full width highlight
-        colSpan = 12;
-      } else if (position === 3 || position === 4 || position === 5) {
-        // Three medium items in a row
-        colSpan = 4;
-      } else if (position === 6) {
-        // Large highlight
-        colSpan = 7;
-      } else if (position === 7) {
-        // Paired with large
-        colSpan = 5;
-      } else if (position === 8 || position === 9 || position === 10 || position === 11) {
-        // Small items in a row
-        colSpan = 3;
+      // Apply each column span in the current pattern
+      for (let i = 0; i < currentPattern.length && tileIndex < tiles.length; i++) {
+        result.push({
+          ...tiles[tileIndex],
+          colSpan: currentPattern[i]
+        });
+        tileIndex++;
       }
       
-      return {
-        ...tile,
-        colSpan
-      };
-    });
+      patternIndex++;
+    }
+    
+    return result;
   };
   
   const dynamicTiles = generateDynamicLayout(methodologyTiles);

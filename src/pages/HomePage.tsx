@@ -40,35 +40,41 @@ const HomePage: React.FC = () => {
     return project.updates.some(update => new Date(update.date) > lastChecked);
   };
 
-  // Generate layout pattern for featured projects
+  // Define the repeating pattern of tile sizes
+  const tilePatterns = [
+    [12],                     // 1 large tile (full row)
+    [6, 6],                   // 2 medium tiles (half row each)
+    [6, 3, 3],                // 1 medium tile + 2 small tiles
+    [3, 6, 3],                // 1 small tile + 1 medium tile + 1 small tile
+    [3, 3, 6]                 // 2 small tiles + 1 medium tile
+  ];
+  
+  // Function to generate randomized layout pattern
   const generateLayoutPattern = (projects) => {
-    // Create interesting layout patterns for homepage
-    return projects.map((project, index) => {
-      let colSpan;
+    // Randomize the starting point in the pattern
+    const startPatternIndex = Math.floor(Math.random() * tilePatterns.length);
+    
+    // Apply the pattern to projects
+    const result = [];
+    let patternIndex = startPatternIndex;
+    let projectIndex = 0;
+    
+    while (projectIndex < projects.length) {
+      const currentPattern = tilePatterns[patternIndex % tilePatterns.length];
       
-      // Use index to create varied but balanced layouts
-      if (index === 0) {
-        // First project gets full width attention
-        colSpan = 12;
-      } else if (projects.length <= 3) {
-        // For small project counts, distribute evenly
-        colSpan = 12 / projects.length;
-      } else {
-        // For more projects, create a more varied grid
-        const position = index % 5;
-        
-        if (position === 1) colSpan = 7;
-        else if (position === 2) colSpan = 5;
-        else if (position === 3) colSpan = 8;
-        else if (position === 4) colSpan = 4;
-        else colSpan = 6;
+      // Apply each column span in the current pattern
+      for (let i = 0; i < currentPattern.length && projectIndex < projects.length; i++) {
+        result.push({
+          ...projects[projectIndex],
+          colSpan: currentPattern[i]
+        });
+        projectIndex++;
       }
       
-      return {
-        ...project,
-        colSpan
-      };
-    });
+      patternIndex++;
+    }
+    
+    return result;
   };
 
   const layoutProjects = generateLayoutPattern(featuredProjects);
