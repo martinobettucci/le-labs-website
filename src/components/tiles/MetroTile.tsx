@@ -550,7 +550,7 @@ const MetroTile: React.FC<MetroTileProps> = ({
     return (
       <motion.div
         ref={tileRef}
-        className={`metro-tile ambient-light-tile w-full ${sizeClasses[size || 'wide']} cursor-pointer ${getAnimationClass()} perspective-1000 relative`}
+        className={`metro-tile ambient-light-tile w-full ${sizeClasses[size || 'large']} cursor-pointer ${getAnimationClass()} perspective-1000 relative`}
         style={{ 
           backgroundColor: tileStyles.background, 
           color: tileStyles.color,

@@ -55,7 +55,7 @@
   }
   
   .metro-tile-large {
-    @apply metro-tile h-80 w-full;
+    @apply metro-tile h-180 w-full;
   }
   
   .metro-tile-wide {

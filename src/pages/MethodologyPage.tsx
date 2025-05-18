@@ -110,9 +110,6 @@ const MethodologyPage: React.FC = () => {
   const tilePatterns = [
     [12],                     // 1 large tile (full row)
     [6, 6],                   // 2 medium tiles (half row each)
-    [6, 3, 3],                // 1 medium tile + 2 small tiles
-    [3, 6, 3],                // 1 small tile + 1 medium tile + 1 small tile
-    [3, 3, 6]                 // 2 small tiles + 1 medium tile
   ];
   
   // Generate randomized layout for methodology tiles

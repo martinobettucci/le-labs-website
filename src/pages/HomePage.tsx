@@ -158,7 +158,6 @@ const HomePage: React.FC = () => {
 								  'md:col-span-12'
 								}
               >
-								<p className="text-white">Featured Projects: </p>
                 <ProjectTile
                   project={project} 
                   hasNewUpdates={hasNewUpdates(project.id)}

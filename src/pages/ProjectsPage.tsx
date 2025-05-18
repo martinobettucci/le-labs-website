@@ -55,59 +55,30 @@ const ProjectsPage: React.FC = () => {
   ];
   
   // Function to generate randomized layout pattern
-  const generateLayoutPattern = (projects) => {
-    // Create a randomly shuffled copy of the tile patterns for even more randomness
-    const shuffledPatterns = [...tilePatterns]
-      .sort(() => Math.random() - 0.5);
-    
-    // Apply the pattern to projects
-    const result = [];
-    let patternIndex = 0;
-    let currentRow = [];
-    let currentRowWidth = 0;
-    
-    for (let i = 0; i < projects.length; i++) {
-      const currentPattern = shuffledPatterns[patternIndex % shuffledPatterns.length];
-      
-      // For each pattern, go through its column spans
-      for (let spanIndex = 0; spanIndex < currentPattern.length && i < projects.length; spanIndex++) {
-        const span = currentPattern[spanIndex];
-        
-        // If adding this span would exceed 12 columns, start a new row
-        if (currentRowWidth + span > 12) {
-          // Fill any remaining space with the current tile (if it's small enough)
-          if (12 - currentRowWidth <= 4 && i < projects.length) {
-            result.push({
-              ...projects[i],
-              colSpan: 12 - currentRowWidth
-            });
-            i++;
-          }
-          
-          // Reset row tracking
-          currentRowWidth = 0;
-          patternIndex++;
-        }
-        
-        // Add the current tile with the appropriate span
-        if (i < projects.length) {
-          result.push({
-            ...projects[i],
-            colSpan: span
-          });
-          currentRowWidth += span;
-          
-          // If we've filled a row, increment pattern and reset row width
-          if (currentRowWidth === 12) {
-            currentRowWidth = 0;
-            patternIndex++;
-          }
-        }
-      }
-    }
-    
-    return result;
-  };
+	const generateLayoutPattern = (projects) => {
+	  // Pour l'effet random, tu peux shuffle tilePatterns ou projects, mais PAS les deux en même temps sinon tu risques de mélanger la logique.
+	  const shuffledPatterns = [...tilePatterns].sort(() => Math.random() - 0.5);
+	
+	  const result = [];
+	  let projectIndex = 0;
+	  let patternIndex = 0;
+	
+	  while (projectIndex < projects.length) {
+	    const currentPattern = shuffledPatterns[patternIndex % shuffledPatterns.length];
+	
+	    for (let spanIndex = 0; spanIndex < currentPattern.length && projectIndex < projects.length; spanIndex++) {
+	      result.push({
+	        ...projects[projectIndex],
+	        colSpan: currentPattern[spanIndex]
+	      });
+	      projectIndex++;
+	    }
+	
+	    patternIndex++;
+	  }
+	  return result;
+	};
+
   
   // Check for new updates in followed projects
   const hasNewUpdates = (projectId: string) => {
