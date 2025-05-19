@@ -2,82 +2,41 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ========================================
+   1. BASE & COMPONENT STYLES (as in your original)
+   ======================================== */
 @layer base {
   html {
     @apply bg-background text-gray-100 antialiased;
   }
-  
   body {
     @apply font-body;
     overflow-x: hidden;
   }
-  
   h1, h2, h3, h4, h5, h6 {
     @apply font-heading font-bold;
   }
-  
-  h1 {
-    @apply text-4xl sm:text-5xl md:text-6xl;
-  }
-  
-  h2 {
-    @apply text-3xl sm:text-4xl md:text-5xl;
-  }
-  
-  h3 {
-    @apply text-2xl sm:text-3xl;
-  }
-  
-  h4 {
-    @apply text-xl sm:text-2xl;
-  }
-  
-  a {
-    @apply transition-colors duration-200;
-  }
-  
-  code, pre {
-    @apply font-mono;
-  }
+  h1 { @apply text-4xl sm:text-5xl md:text-6xl; }
+  h2 { @apply text-3xl sm:text-4xl md:text-5xl; }
+  h3 { @apply text-2xl sm:text-3xl; }
+  h4 { @apply text-xl sm:text-2xl; }
+  a { @apply transition-colors duration-200; }
+  code, pre { @apply font-mono; }
 }
 
 @layer components {
   .metro-tile {
     @apply relative overflow-hidden transition-all duration-300 ease-out rounded-sm shadow-lg;
   }
-  
-  .metro-tile-small {
-    @apply metro-tile h-40 w-full;
-  }
-  
-  .metro-tile-medium {
-    @apply metro-tile h-60 w-full;
-  }
-  
-  .metro-tile-large {
-    @apply metro-tile h-180 w-full;
-  }
-  
-  .metro-tile-wide {
-    @apply metro-tile h-48 w-full;
-  }
-  
-  .metro-tile-headline {
-    @apply text-sm uppercase tracking-wider font-bold;
-  }
-  
-  .metro-tile-content {
-    @apply p-5 h-full flex flex-col justify-between;
-  }
-  
-  .button-primary {
-    @apply px-5 py-2 bg-primary hover:bg-primary-dark text-white font-medium transition-colors;
-  }
-  
-  .button-outline {
-    @apply px-5 py-2 border-2 border-primary text-primary hover:bg-primary hover:text-white font-medium transition-colors;
-  }
-  
+  .metro-tile-small { @apply metro-tile h-68 w-full; }
+  .metro-tile-medium { @apply metro-tile h-68 w-full; }
+  .metro-tile-large { @apply metro-tile h-180 w-full; }
+  .metro-tile-wide { @apply metro-tile h-56 w-full; }
+  .metro-tile-headline { @apply text-sm uppercase tracking-wider font-bold; }
+  .metro-tile-content { @apply p-5 h-full flex flex-col justify-between; }
+  .button-primary { @apply px-5 py-2 bg-primary hover:bg-primary-dark text-white font-medium transition-colors; }
+  .button-outline { @apply px-5 py-2 border-2 border-primary text-primary hover:bg-primary hover:text-white font-medium transition-colors; }
+
   /* Page transition styles */
   .page-transition {
     @apply min-h-[calc(100vh-64px)] w-full;
@@ -86,108 +45,166 @@
     backface-visibility: hidden;
     transform-style: flat;
   }
-  
-  /* Disable pointer events only during active animation */
-  .page-transition[data-motion-state="animating"] {
-    pointer-events: none;
-  }
-  
-  /* Container for page transitions */
-  .transition-container {
-    overflow: hidden;
-    position: relative;
-    width: 100%;
-  }
-  
+  .page-transition[data-motion-state="animating"] { pointer-events: none; }
+  .transition-container { overflow: hidden; position: relative; width: 100%; }
+
   /* Ambient light styling */
   .ambient-light-tile {
     @apply relative;
     transition: box-shadow 1.2s ease;
-  }
-  
-  .ambient-light-tile {
     box-shadow: 0 0 48px 4px var(--ambient-color, rgba(255,255,255,0.15));
   }
-  
   .ambient-light-tile:hover {
     box-shadow: 0 0 64px 6px var(--ambient-color, rgba(255,255,255,0.25));
   }
-  
-  /* New animation classes */
-  .kaleidoscope-bg {
-    @apply relative overflow-hidden;
-    background: linear-gradient(45deg, 
-      rgba(35, 70, 140, 0.7),
-      rgba(35, 140, 51, 0.7),
-      rgba(217, 207, 74, 0.7),
-      rgba(242, 65, 65, 0.7)
-    );
-    background-size: 400% 400%;
-    animation: gradient-shift 8s ease infinite;
-  }
-  
-  /* Obturator (camera shutter) effect */
-  .obturator-open {
-    animation: obturator-open 0.5s forwards ease-out;
-  }
-  
-  @keyframes gradient-shift {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
-  }
-  
-  @keyframes obturator-open {
-    0% { clip-path: circle(0% at center); }
-    100% { clip-path: circle(150% at center); }
-  }
-  
-  /* Rainbow sliding doors effect */
-  .rainbow-doors {
-    position: relative;
-    overflow: hidden;
-  }
-  
-  .rainbow-doors::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, 
-      rgba(255,0,0,0.2), 
-      rgba(255,165,0,0.2), 
-      rgba(255,255,0,0.2), 
-      rgba(0,128,0,0.2), 
-      rgba(0,0,255,0.2), 
-      rgba(75,0,130,0.2), 
-      rgba(238,130,238,0.2)
-    );
-    background-size: 700% 100%;
-    animation: rainbow-slide 1s ease-out forwards;
-    mix-blend-mode: overlay;
-  }
-  
-  @keyframes rainbow-slide {
-    0% { transform: translateX(-100%); }
-    100% { transform: translateX(0); }
-  }
-  
-  /* New 3D flipping card styles */
-  .perspective-1000 {
-    perspective: 1000px;
-  }
-  
-  .preserve-3d {
-    transform-style: preserve-3d;
-  }
-  
-  .backface-hidden {
-    backface-visibility: hidden;
-  }
-  
-  .rotate-y-180 {
-    transform: rotateY(180deg);
-  }
+
+  /* 3D flipping card styles */
+  .perspective-1000 { perspective: 1000px; }
+  .preserve-3d { transform-style: preserve-3d; }
+  .backface-hidden { backface-visibility: hidden; }
+  .rotate-y-180 { transform: rotateY(180deg); }
+}
+
+/* ========================================
+   2. ANIMATIONS
+   ======================================== */
+
+/* -- KALEIDOSCOPE (slightly more transparent to preserve tile color) -- */
+.kaleidoscope-bg {
+  @apply relative overflow-hidden;
+  background: linear-gradient(45deg, 
+    rgba(35, 70, 140, 0.35),
+    rgba(35, 140, 51, 0.35),
+    rgba(217, 207, 74, 0.35),
+    rgba(242, 65, 65, 0.35)
+  );
+  background-size: 400% 400%;
+  animation: gradient-shift 8s ease infinite;
+}
+@keyframes gradient-shift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* -- RAINBOW DOORS (make overlay less strong) -- */
+.rainbow-doors {
+  position: relative;
+  overflow: hidden;
+}
+.rainbow-doors::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: linear-gradient(90deg, 
+    rgba(255,0,0,0.08), 
+    rgba(255,165,0,0.08), 
+    rgba(255,255,0,0.08), 
+    rgba(0,128,0,0.08), 
+    rgba(0,0,255,0.08), 
+    rgba(75,0,130,0.08), 
+    rgba(238,130,238,0.08)
+  );
+  background-size: 700% 100%;
+  animation: rainbow-slide 1.2s ease-out forwards;
+  mix-blend-mode: lighten;
+  pointer-events: none;
+  z-index: 1;
+}
+@keyframes rainbow-slide {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(0); }
+}
+
+/* --- Animated Shadow Pulse --- */
+.animated-shadow {
+  animation: shadow-pulse 2.2s infinite cubic-bezier(0.4,0,0.2,1);
+  box-shadow: 0 0 32px 0 var(--ambient-color, 0.20);
+}
+@keyframes shadow-pulse {
+  0%, 100% { box-shadow: 0 0 32px 0 var(--ambient-color, 0.20);}
+  60% { box-shadow: 0 0 64px 12px var(--ambient-color, 0.28);}
+}
+
+/* --- Animated Border Gradient --- */
+.animated-border {
+  position: relative;
+  z-index: 0;
+}
+.animated-border::after {
+  content: '';
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  border-radius: inherit;
+  padding: 2px;
+  pointer-events: none;
+  background: linear-gradient(270deg, #ff6a00, #ffd800, #21d4fd, #b721ff, #ff6a00);
+  background-size: 400% 400%;
+  animation: border-gradient-move 5s linear infinite;
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+}
+@keyframes border-gradient-move {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 100% 50%; }
+}
+
+/* --- Subtle Waves Overlay --- */
+.subtle-waves {
+  position: relative;
+}
+.subtle-waves::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  /* Example with diagonal gradient; replace with SVG data-uri for more complex waves */
+  background: repeating-linear-gradient(
+    120deg,
+    rgba(255,255,255,0.07) 0px,
+    rgba(255,255,255,0.07) 2px,
+    transparent 4px,
+    transparent 18px
+  );
+  opacity: 1;
+  animation: waves-move 7s linear infinite;
+  z-index: 1;
+}
+@keyframes waves-move {
+  0% { background-position: 0 0; }
+  100% { background-position: 200px 200px; }
+}
+
+/* --- Tile Glow on Hover --- */
+.tile-glow {
+  transition: box-shadow 0.6s cubic-bezier(0.4,0,0.2,1);
+}
+.tile-glow:hover {
+  box-shadow: 0 0 48px 8px var(--ambient-color, 0.15),
+              0 0 0 4px rgba(255,255,255,0.10) inset;
+}
+
+/* --- Flat Animated Overlay (animated light gradient, very subtle) --- */
+.flat-animated-overlay {
+  position: relative;
+  overflow: hidden;
+}
+.flat-animated-overlay::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(120deg, rgba(255,255,255,0.06) 0%, rgba(0,0,0,0.03) 100%);
+  opacity: 1;
+  animation: overlay-move 5s linear infinite alternate;
+  z-index: 1;
+}
+@keyframes overlay-move {
+  0% { background-position: 0% 0%; }
+  100% { background-position: 100% 100%; }
 }

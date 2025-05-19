@@ -1,0 +1,77 @@
+{
+  "meta": {
+    "lastUpdated": "2025-04-12T08:00:00Z",
+    "version": "1.0.0"
+  },
+  "pages": {
+    "home": {
+      "title": "LE LABS",
+      "subtitle": "Laboratory About Business Solutions",
+      "description": "The R&D department of P2Enjoy Studio, exploring creative technologies and their business applications.",
+      "layout": [
+        {
+          "type": "hero",
+          "content": {
+            "heading": "Exploring Tomorrow's Creative Technology",
+            "subheading": "Research & Development at P2Enjoy Studio",
+            "cta": "View Our Projects"
+          },
+          "styles": {
+            "background": "#23468C",
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "type": "featured-projects",
+          "content": {
+            "heading": "Featured Research",
+            "description": "Current initiatives exploring the future of creative technology."
+          }
+        },
+        {
+          "type": "news-grid",
+          "content": {
+            "heading": "Latest Updates",
+            "description": "News and developments from our lab."
+          }
+        },
+        {
+          "type": "cta-block",
+          "content": {
+            "heading": "Join Our Research",
+            "description": "Interested in collaborating on a project? Contact us to discuss possibilities.",
+            "buttonText": "Start a Conversation",
+            "buttonLink": "/contact"
+          },
+          "styles": {
+            "background": "#238C33",
+            "color": "#FFFFFF"
+          }
+        }
+      ]
+    },
+    "methodology": {
+      "title": "Our Methodology",
+      "description": "How we approach research and development at LE LABS.",
+      "content": [
+        {
+          "heading": "Research Philosophy",
+          "text": "We believe in human-centered design combined with rigorous technical exploration. Our process starts with identifying unmet needs in creative workflows and technology gaps that could address them."
+        },
+        {
+          "heading": "Our Process",
+          "text": "1. Define research questions based on industry needs\n2. Explore technical possibilities and constraints\n3. Develop proof-of-concept prototypes\n4. Test with real users in authentic contexts\n5. Refine based on feedback and insights\n6. Transition promising research to production development"
+        },
+        {
+          "heading": "Open Research",
+          "text": "We're committed to sharing our findings with the broader community. When possible, we publish research papers, open-source code, and host knowledge-sharing events."
+        }
+      ]
+    },
+    "about": {
+      "title": "About LE LABS",
+      "description": "The research and development department of P2Enjoy Studio.",
+      "content": "LE LABS (Laboratory About Business Solutions) is the dedicated R&D department of P2Enjoy Studio, focused on exploring emerging technologies and their applications for creative professionals. Established in 2023, our team of researchers, designers, and engineers work at the intersection of technology and creativity.\n\nOur mission is to identify, explore, and develop new tools and methodologies that expand creative possibilities while solving real business challenges. We believe that technological innovation should serve human creativity, not replace it.\n\nAt LE LABS, we maintain a balance between speculative research that looks years ahead and practical innovations that can benefit creative professionals today."
+    }
+  }
+}

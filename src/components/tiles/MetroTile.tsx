@@ -24,7 +24,7 @@ interface MetroTileProps {
 type FaceType = 'details' | 'image' | 'links';
 
 // Transition types
-type TransitionType = 'fade' | 'slide' | 'scale' | 'kaleidoscope' | 'rainbow' | 'obturator' | 'slidingDoors' | 'zoom' | 'flip';
+type TransitionType = 'fade' | 'slide' | 'scale' | 'kaleidoscope' | 'rainbow' | 'slidingDoors' | 'zoom' | 'flip';
 
 const MetroTile: React.FC<MetroTileProps> = ({
   title,
@@ -153,20 +153,26 @@ const MetroTile: React.FC<MetroTileProps> = ({
     return () => clearInterval(intervalId);
   }, [image, links, reducedMotion, availableFaces]);
   
-  // Determine a random transition type when component mounts
-  useEffect(() => {
-    if (reducedMotion) {
-      setTransitionType('fade');
-      return;
-    }
-    
-    const availableTransitions: TransitionType[] = [
-      'fade', 'slide', 'scale', 'zoom', 'flip', 'kaleidoscope', 'rainbow', 'obturator', 'slidingDoors'
-    ];
-        
-    const randomIndex = Math.floor(Math.random() * availableTransitions.length);
-    setTransitionType(availableTransitions[randomIndex]);
-  }, [reducedMotion, tileStyles]);
+	useEffect(() => {
+	  // Liste des transitions valides pour ce composant
+	  const availableTransitions: TransitionType[] = [
+	    'fade', 'slide', 'scale', 'zoom', 'flip', 'kaleidoscope', 'rainbow', 'slidingDoors'
+	  ];
+	
+	  if (reducedMotion) {
+	    setTransitionType('fade');
+	    return;
+	  }
+	
+	  // Vérifie la présence d'une transition forcée en localStorage
+	  const forced = localStorage.getItem('forceTransition');
+	  if (forced && availableTransitions.includes(forced as TransitionType)) {
+	    setTransitionType(forced as TransitionType);
+	  } else {
+	    const randomIndex = Math.floor(Math.random() * availableTransitions.length);
+	    setTransitionType(availableTransitions[randomIndex]);
+	  }
+	}, [reducedMotion, tileStyles]);
   
   // Handle tile click (excluding the flip button click)
   const handleTileClick = (e: React.MouseEvent) => {
@@ -228,19 +234,19 @@ const MetroTile: React.FC<MetroTileProps> = ({
   // Determine tile size class - This is no longer being used for setting the size
   // The size is now determined by the grid layout in the parent component
   const sizeClasses = {
-		small: 'h-40 md:h-68',
-		medium: 'h-60 md:h-68',
-		large: 'h-80 md:h-100',
-		wide: 'h-48 md:h-56'
+		small: 'h-68 md:h-68',
+		medium: 'h-68 md:h-68',
+		large: 'h-100 md:h-100',
+		wide: 'h-56 md:h-56'
 	};
 
   
   // Get transition-specific animation variants
   const getVariants = () => {
-    // Base animation for hover and tap - FIXED: reduced hover scale to prevent excessive growth
+    // Base animation for hover and tap
     const hoverTapAnimations = {
       hover: { 
-        scale: transitionType === 'obturator' ? 1.01 : 1.02, // Even smaller scale for obturator transition
+        scale: 1.02,
         transition: { duration: 0.3 }
       },
       tap: { 
@@ -327,33 +333,6 @@ const MetroTile: React.FC<MetroTileProps> = ({
           },
           ...hoverTapAnimations
         };
-      case 'obturator':
-        return {
-          initial: { 
-            opacity: 0,
-            clipPath: 'circle(0% at center)'
-          },
-          animate: { 
-            opacity: 1,
-            clipPath: 'circle(150% at center)',
-            transition: { 
-              clipPath: {
-                duration: 1.0,
-                ease: [0.22, 1, 0.36, 1]
-              },
-              opacity: { duration: 0.5 }
-            }
-          },
-          // Fixed: Custom hover animation for obturator to limit scale
-          hover: {
-            scale: 1.01, // Much smaller scale for obturator effect
-            transition: { duration: 0.3 }
-          },
-          tap: { 
-            scale: 0.98,
-            transition: { duration: 0.1 }
-          }
-        };
       case 'slidingDoors':
         return {
           initial: { 
@@ -435,18 +414,21 @@ const MetroTile: React.FC<MetroTileProps> = ({
   };
   
   // Get animation class based on transition type
-  const getAnimationClass = () => {
-    switch (transitionType) {
-      case 'rainbow':
-        return 'rainbow-doors';
-      case 'kaleidoscope':
-        return 'kaleidoscope-bg';
-      case 'obturator':
-        return 'obturator-open';
-      default:
-        return '';
-    }
-  };
+	const getAnimationClass = () => {
+	  // All animation classes (add/remove as you want)
+	  const classes = [
+	    '', // No animation, classic tile
+	    'kaleidoscope-bg',
+	    // 'rainbow-doors',
+	    // 'animated-shadow',
+	    // 'animated-border',
+	    // 'subtle-waves',
+	    // 'tile-glow',
+	    // 'flat-animated-overlay'
+	  ];
+	  // Pick a random animation class
+	  return classes[Math.floor(Math.random() * classes.length)];
+	};
   
   // Animation for face transitions
   const getFaceAnimation = (face: FaceType) => {
@@ -529,7 +511,6 @@ const MetroTile: React.FC<MetroTileProps> = ({
     >
       <div className="text-center mb-4">
         <h3 className="metro-tile-headline mb-2">{title}</h3>
-        <p className="text-sm font-medium">Project Links</p>
       </div>
       
       {links}

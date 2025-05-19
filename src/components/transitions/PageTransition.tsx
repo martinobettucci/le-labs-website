@@ -17,20 +17,29 @@ const PageTransition: React.FC<PageTransitionProps> = ({ children }) => {
   const [isAnimating, setIsAnimating] = useState(false);
   
   // Determine a random transition type when location changes
-  useEffect(() => {
-    if (reducedMotion) {
-      setTransitionType('fade');
-      return;
-    }
-    
-    const transitions: TransitionType[] = [
-      'fade', 'slide', 'scale', 'zoom', 'obturator', 'slidingDoors'
-      // Removed more extreme transitions like kaleidoscope, rainbow and flip
-      // for page transitions to keep things more usable
-    ];
-    const randomIndex = Math.floor(Math.random() * transitions.length);
-    setTransitionType(transitions[randomIndex]);
-  }, [location.pathname, reducedMotion]);
+	useEffect(() => {
+	  // Liste des transitions valides
+	  const validTransitions: TransitionType[] = [
+	    'fade', 'slide', 'scale', 'zoom', 'obturator', 'slidingDoors'
+	  ];
+	
+	  // Cas accessibilité : réduit le mouvement
+	  if (reducedMotion) {
+	    setTransitionType('fade');
+	    return;
+	  }
+	
+	  // Test localStorage : transition forcée ?
+	  const forced = localStorage.getItem('forceTransition');
+	  if (forced && validTransitions.includes(forced as TransitionType)) {
+	    setTransitionType(forced as TransitionType);
+	  } else {
+	    // Choix aléatoire sinon
+	    const randomIndex = Math.floor(Math.random() * validTransitions.length);
+	    setTransitionType(validTransitions[randomIndex]);
+	  }
+	}, [location.pathname, reducedMotion]);
+
   
   // Get transition-specific animation variants
   const getVariants = () => {

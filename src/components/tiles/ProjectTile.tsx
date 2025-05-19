@@ -22,8 +22,9 @@ const ProjectTile: React.FC<ProjectTileProps> = ({ project, hasNewUpdates = fals
       case 6:
         return 'medium';
       case 12:
+				return 'wide';
       default:
-        return 'wide';
+        return 'large';
     }
   };
 
@@ -180,7 +181,7 @@ const ProjectTile: React.FC<ProjectTileProps> = ({ project, hasNewUpdates = fals
     <motion.div
       initial={animation.initial}
       animate={animation.animate}
-      whileHover={{ scale: 1.02, transition: { duration: 0.3 } }}
+      //whileHover={{ scale: 1.02, transition: { duration: 0.3 } }}
       className="h-full"
     >
       <div className="h-full">
