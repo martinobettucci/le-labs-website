@@ -5,6 +5,7 @@ import { supabase } from '../lib/supabase';
 describe('Supabase RLS Tests', () => {
   beforeAll(() => {
     // Vérifier que les variables d'environnement sont présentes
+    console.log(import.meta.env.VITE_SUPABASE_URL);
     expect(import.meta.env.VITE_SUPABASE_URL).toBeDefined();
     expect(import.meta.env.VITE_SUPABASE_ANON_KEY).toBeDefined();
   });

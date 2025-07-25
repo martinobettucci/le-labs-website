@@ -8,8 +8,8 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "test": "vitest",
-    "test:watch": "vitest --watch"
+    "test": "NODE_ENV=test vitest",
+    "test:watch": "NODE_ENV=test vitest --watch"
   },
   "dependencies": {
     "@radix-ui/react-dialog": "^1.0.5",
