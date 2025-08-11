@@ -23,7 +23,7 @@ const HomePage: React.FC = () => {
   }
 
   const homeData = data.pages.home;
-  const featuredProjects = data.projects.filter(p => p.featured);
+  const featuredProjects = data.projects?.filter(p => p.featured) || [];
   
   // Define the repeating pattern of tile sizes
   const tilePatterns = [

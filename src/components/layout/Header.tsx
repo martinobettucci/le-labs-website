@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink, Link } from 'react-router-dom';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { Menu } from 'lucide-react';
+import { Menu, LogIn, LogOut, User } from 'lucide-react';
+import { useAuth } from '../../contexts/AuthContext';
 
 interface HeaderProps {
   toggleMobileMenu: () => void;
@@ -10,6 +11,7 @@ interface HeaderProps {
 const Header: React.FC<HeaderProps> = ({ toggleMobileMenu }) => {
   const { scrollY } = useScroll();
   const [scrolled, setScrolled] = useState(false);
+  const { user, signOut } = useAuth();
   
   // Transform properties based on scroll
   const backgroundColor = useTransform(
@@ -60,7 +62,7 @@ const Header: React.FC<HeaderProps> = ({ toggleMobileMenu }) => {
         
         {/* Desktop Navigation */}
         <nav className="hidden md:block">
-          <ul className="flex space-x-6">
+          <ul className="flex items-center space-x-6">
             {navItems.map((item) => (
               <li key={item.path}>
                 <NavLink 
@@ -76,12 +78,39 @@ const Header: React.FC<HeaderProps> = ({ toggleMobileMenu }) => {
                 </NavLink>
               </li>
             ))}
+            
+            {/* Authentication Links */}
+            <li className="ml-2">
+              {user ? (
+                <div className="flex items-center space-x-3">
+                  <div className="flex items-center text-gray-300">
+                    <User size={16} className="mr-1" />
+                    <span className="text-sm">{user.email}</span>
+                  </div>
+                  <button
+                    onClick={() => signOut()}
+                    className="flex items-center text-gray-300 hover:text-white transition-colors"
+                    title="Sign Out"
+                  >
+                    <LogOut size={16} />
+                  </button>
+                </div>
+              ) : (
+                <Link
+                  to="/login"
+                  className="flex items-center text-gray-300 hover:text-highlight transition-colors"
+                >
+                  <LogIn size={16} className="mr-1" />
+                  <span>Login</span>
+                </Link>
+              )}
+            </li>
           </ul>
         </nav>
         
         {/* Mobile menu button */}
         <button 
-          className="md:hidden p-2 text-white"
+          className="md:hidden p-2"
           onClick={toggleMobileMenu}
           aria-label="Toggle menu"
         >

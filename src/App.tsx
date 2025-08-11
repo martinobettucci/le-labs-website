@@ -14,6 +14,7 @@ import MethodologyPage from './pages/MethodologyPage';
 import YourNewsPage from './pages/YourNewsPage';
 import AboutPage from './pages/AboutPage';
 import ContactPage from './pages/ContactPage';
+import LoginPage from './pages/LoginPage';
 import NotFoundPage from './pages/NotFoundPage';
 
 // Components
@@ -33,7 +34,7 @@ function App() {
         duration: 1.2,
         easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
         orientation: 'vertical',
-        smoothTouch: false,
+        // smoothTouch: false,
       });
       
       function raf(time: number) {
@@ -61,6 +62,7 @@ function App() {
             <Route path="your-news" element={<PageTransition><YourNewsPage /></PageTransition>} />
             <Route path="about" element={<PageTransition><AboutPage /></PageTransition>} />
             <Route path="contact" element={<PageTransition><ContactPage /></PageTransition>} />
+            <Route path="login" element={<PageTransition><LoginPage /></PageTransition>} />
             <Route path="*" element={<PageTransition><NotFoundPage /></PageTransition>} />
           </Route>
         </Routes>
