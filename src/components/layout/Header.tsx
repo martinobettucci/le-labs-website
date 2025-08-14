@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink, Link } from 'react-router-dom';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { Menu, LogIn, LogOut, User } from 'lucide-react';
-import { useAuth } from '../../contexts/AuthContext';
+import { Menu } from 'lucide-react';
+import UserAuthSection from '../account/UserAuthSection';
 
 interface HeaderProps {
   toggleMobileMenu: () => void;
@@ -11,7 +11,6 @@ interface HeaderProps {
 const Header: React.FC<HeaderProps> = ({ toggleMobileMenu }) => {
   const { scrollY } = useScroll();
   const [scrolled, setScrolled] = useState(false);
-  const { user, signOut } = useAuth();
   
   // Transform properties based on scroll
   const backgroundColor = useTransform(
@@ -79,31 +78,9 @@ const Header: React.FC<HeaderProps> = ({ toggleMobileMenu }) => {
               </li>
             ))}
             
-            {/* Authentication Links */}
+            {/* Authentication Section */}
             <li className="ml-2">
-              {user ? (
-                <div className="flex items-center space-x-3">
-                  <div className="flex items-center text-gray-300">
-                    <User size={16} className="mr-1" />
-                    <span className="text-sm">{user.email}</span>
-                  </div>
-                  <button
-                    onClick={() => signOut()}
-                    className="flex items-center text-gray-300 hover:text-white transition-colors"
-                    title="Sign Out"
-                  >
-                    <LogOut size={16} />
-                  </button>
-                </div>
-              ) : (
-                <Link
-                  to="/login"
-                  className="flex items-center text-gray-300 hover:text-highlight transition-colors"
-                >
-                  <LogIn size={16} className="mr-1" />
-                  <span>Login</span>
-                </Link>
-              )}
+              <UserAuthSection />
             </li>
           </ul>
         </nav>

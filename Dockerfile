@@ -11,6 +11,13 @@ COPY package*.json ./
 # Inject localhost from host
 # RUN echo "172.17.0.1 host.docker.internal" >> /etc/hosts
 
+RUN apt update
+RUN apt install curl gpg netcat-traditional -y
+RUN curl -s https://packages.stripe.dev/api/security/keypair/stripe-cli-gpg/public | gpg --dearmor | tee /usr/share/keyrings/stripe.gpg
+RUN echo "deb [signed-by=/usr/share/keyrings/stripe.gpg] https://packages.stripe.dev/stripe-cli-debian-local stable main" | tee -a /etc/apt/sources.list.d/stripe.list
+RUN apt update
+RUN apt install stripe -y
+
 # Installer les dépendances
 RUN npm install
 
@@ -27,4 +34,4 @@ ENV CHOKIDAR_INTERVAL=1000
 
 
 # Démarrer l'application en mode développement
-CMD ["npm", "run", "dev"]
+CMD ["npm", "run", "integration"]

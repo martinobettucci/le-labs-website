@@ -1,8 +1,8 @@
 import React from 'react';
-import { NavLink, Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, LogIn, LogOut, User } from 'lucide-react';
-import { useAuth } from '../../contexts/AuthContext';
+import { X } from 'lucide-react';
+import MobileUserAuthSection from '../account/MobileUserAuthSection'; 
 
 interface MobileMenuProps {
   isOpen: boolean;
@@ -10,7 +10,6 @@ interface MobileMenuProps {
 }
 
 const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose }) => {
-  const { user, signOut } = useAuth();
   
   const navItems = [
     { path: '/', label: 'Home' },
@@ -81,33 +80,7 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose }) => {
                   transition={{ delay: navItems.length * 0.1 }}
                   className="text-center pt-8 border-t border-gray-700"
                 >
-                  {user ? (
-                    <div className="space-y-4">
-                      <div className="flex items-center justify-center text-gray-300">
-                        <User size={20} className="mr-2" />
-                        <span className="text-lg">{user.email}</span>
-                      </div>
-                      <button
-                        onClick={() => {
-                          signOut();
-                          onClose();
-                        }}
-                        className="flex items-center justify-center text-gray-300 hover:text-white transition-colors text-xl"
-                      >
-                        <LogOut size={20} className="mr-2" />
-                        <span>Sign Out</span>
-                      </button>
-                    </div>
-                  ) : (
-                    <Link
-                      to="/login"
-                      onClick={onClose}
-                      className="flex items-center justify-center text-gray-300 hover:text-highlight transition-colors text-xl"
-                    >
-                      <LogIn size={20} className="mr-2" />
-                      <span>Login</span>
-                    </Link>
-                  )}
+                  <MobileUserAuthSection onClose={onClose} />
                 </motion.li>
               </ul>
             </nav>

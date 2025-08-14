@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import Lenis from 'lenis';
 import { AnimatePresence } from 'framer-motion';
@@ -15,6 +15,8 @@ import YourNewsPage from './pages/YourNewsPage';
 import AboutPage from './pages/AboutPage';
 import ContactPage from './pages/ContactPage';
 import LoginPage from './pages/LoginPage';
+import AccountPage from './pages/AccountPage';
+import BillingSuccessPage from './pages/BillingSuccessPage';
 import NotFoundPage from './pages/NotFoundPage';
 
 // Components
@@ -63,6 +65,8 @@ function App() {
             <Route path="about" element={<PageTransition><AboutPage /></PageTransition>} />
             <Route path="contact" element={<PageTransition><ContactPage /></PageTransition>} />
             <Route path="login" element={<PageTransition><LoginPage /></PageTransition>} />
+            <Route path="account" element={<PageTransition><AccountPage /></PageTransition>} />
+            <Route path="billing/success" element={<PageTransition><BillingSuccessPage /></PageTransition>} />
             <Route path="*" element={<PageTransition><NotFoundPage /></PageTransition>} />
           </Route>
         </Routes>
