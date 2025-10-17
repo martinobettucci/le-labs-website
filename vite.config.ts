@@ -11,5 +11,9 @@ export default defineConfig({
     port: 5173,
     host: '0.0.0.0',
     allowedHosts: ['labs-hub'],
+    hmr: {
+      port: 8080,
+      host: "labs-hub",
+    },
   },
 });
