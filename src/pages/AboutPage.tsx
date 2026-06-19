@@ -40,7 +40,7 @@ const AboutPage: React.FC = () => {
             className="mb-16"
           >
             <div className="prose prose-invert max-w-none">
-              {aboutData.content.split('\n').map((paragraph, i) => (
+              {aboutData.content?.split('\n').map((paragraph, i) => (
                 <p key={i} className="text-gray-300 mb-4">{paragraph}</p>
               ))}
             </div>

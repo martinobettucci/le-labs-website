@@ -19,6 +19,5 @@ coverage
 .git
 .gitignore
 README.md
-Dockerfile
-.dockerignore
-docker-compose.yml 
+e2e/node_modules
+e2e/artifacts

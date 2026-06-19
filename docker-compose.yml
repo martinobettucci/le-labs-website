@@ -1,0 +1,191 @@
+# =============================================================================
+# LE LABS — Sovereign (self-hosted) Supabase, lean stack — BASE compose
+# =============================================================================
+# This base file defines the environment-agnostic, fully self-hosted Supabase
+# core: Postgres + Auth (GoTrue) + REST (PostgREST) + Storage + an nginx API
+# gateway that exposes the single Supabase URL (http://gateway:8000).
+#
+# It is never started on its own. Combine it with an override:
+#   dev  : docker compose --env-file .env.dev  -f docker-compose.yml -f docker-compose.dev.yml  up
+#   prod : docker compose --env-file .env.prod -f docker-compose.yml -f docker-compose.prod.yml up
+#
+# Storage S3 backend and Auth SMTP are configured purely through env vars so the
+# exact same service definitions work against MinIO/Inbucket (dev) or real
+# S3/SMTP (prod).
+# =============================================================================
+
+name: le-labs
+
+services:
+  # ---------------------------------------------------------------------------
+  # PostgreSQL — the single source of truth (Supabase-flavoured image: ships the
+  # anon/authenticated/service_role/authenticator + supabase_*_admin roles,
+  # required extensions and the PostgREST schema-reload event triggers).
+  # ---------------------------------------------------------------------------
+  db:
+    image: supabase/postgres:17.6.1.136
+    container_name: labs-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_HOST: /var/run/postgresql
+      PGPORT: ${POSTGRES_PORT}
+      POSTGRES_PORT: ${POSTGRES_PORT}
+      PGPASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      PGDATABASE: ${POSTGRES_DB}
+      POSTGRES_DB: ${POSTGRES_DB}
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_EXP: ${JWT_EXPIRY}
+    volumes:
+      - db-data:/var/lib/postgresql/data:Z
+      - ./docker/db/init/01-roles.sql:/docker-entrypoint-initdb.d/init-scripts/01-roles.sql:Z
+      - ./docker/db/init/02-jwt.sql:/docker-entrypoint-initdb.d/init-scripts/02-jwt.sql:Z
+      - ./docker/db/init/03-schema-ownership.sql:/docker-entrypoint-initdb.d/init-scripts/03-schema-ownership.sql:Z
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "postgres", "-h", "localhost"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    command:
+      - postgres
+      - -c
+      - config_file=/etc/postgresql/postgresql.conf
+      - -c
+      - log_min_messages=fatal
+
+  # ---------------------------------------------------------------------------
+  # Auth (GoTrue) — email magic-link / OTP. SMTP target comes from env.
+  # ---------------------------------------------------------------------------
+  auth:
+    image: supabase/gotrue:v2.189.0
+    container_name: labs-auth
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:9999/health"]
+      timeout: 5s
+      interval: 5s
+      retries: 10
+    environment:
+      GOTRUE_API_HOST: 0.0.0.0
+      GOTRUE_API_PORT: 9999
+      API_EXTERNAL_URL: ${API_EXTERNAL_URL}
+
+      GOTRUE_DB_DRIVER: postgres
+      GOTRUE_DB_DATABASE_URL: postgres://supabase_auth_admin:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}
+
+      GOTRUE_SITE_URL: ${SITE_URL}
+      GOTRUE_URI_ALLOW_LIST: ${ADDITIONAL_REDIRECT_URLS}
+      GOTRUE_DISABLE_SIGNUP: ${DISABLE_SIGNUP}
+
+      GOTRUE_JWT_ADMIN_ROLES: service_role
+      GOTRUE_JWT_AUD: authenticated
+      GOTRUE_JWT_DEFAULT_GROUP_NAME: authenticated
+      GOTRUE_JWT_EXP: ${JWT_EXPIRY}
+      GOTRUE_JWT_SECRET: ${JWT_SECRET}
+      GOTRUE_JWT_ISSUER: ${API_EXTERNAL_URL}/auth/v1
+
+      GOTRUE_EXTERNAL_EMAIL_ENABLED: "true"
+      GOTRUE_MAILER_AUTOCONFIRM: ${ENABLE_EMAIL_AUTOCONFIRM}
+      # Magic-link / OTP: the email carries both a confirmation URL and a numeric
+      # token ({{ .Token }}) so the back-office supports link OR code entry.
+      GOTRUE_MAILER_OTP_EXP: "3600"
+      GOTRUE_MAILER_OTP_LENGTH: "6"
+
+      GOTRUE_SMTP_ADMIN_EMAIL: ${SMTP_ADMIN_EMAIL}
+      GOTRUE_SMTP_HOST: ${SMTP_HOST}
+      GOTRUE_SMTP_PORT: ${SMTP_PORT}
+      GOTRUE_SMTP_USER: ${SMTP_USER}
+      GOTRUE_SMTP_PASS: ${SMTP_PASS}
+      GOTRUE_SMTP_SENDER_NAME: ${SMTP_SENDER_NAME}
+      GOTRUE_MAILER_URLPATHS_INVITE: /auth/v1/verify
+      GOTRUE_MAILER_URLPATHS_CONFIRMATION: /auth/v1/verify
+      GOTRUE_MAILER_URLPATHS_RECOVERY: /auth/v1/verify
+      GOTRUE_MAILER_URLPATHS_EMAIL_CHANGE: /auth/v1/verify
+
+  # ---------------------------------------------------------------------------
+  # REST (PostgREST) — auto REST API over the public/storage schemas.
+  # ---------------------------------------------------------------------------
+  rest:
+    image: postgrest/postgrest:v14.12
+    container_name: labs-rest
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      PGRST_DB_URI: postgres://authenticator:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}
+      PGRST_DB_SCHEMAS: ${PGRST_DB_SCHEMAS}
+      PGRST_DB_ANON_ROLE: anon
+      PGRST_JWT_SECRET: ${JWT_SECRET}
+      PGRST_DB_USE_LEGACY_GUCS: "false"
+      PGRST_APP_SETTINGS_JWT_SECRET: ${JWT_SECRET}
+      PGRST_APP_SETTINGS_JWT_EXP: ${JWT_EXPIRY}
+    command: ["postgrest"]
+
+  # ---------------------------------------------------------------------------
+  # Storage — S3-backed object storage. S3 target (MinIO in dev, real S3 in
+  # prod) is supplied entirely through env vars.
+  # ---------------------------------------------------------------------------
+  storage:
+    image: supabase/storage-api:v1.60.4
+    container_name: labs-storage
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+      rest:
+        condition: service_started
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:5000/status"]
+      timeout: 5s
+      interval: 5s
+      retries: 10
+    environment:
+      ANON_KEY: ${ANON_KEY}
+      SERVICE_KEY: ${SERVICE_ROLE_KEY}
+      POSTGREST_URL: http://rest:3000
+      PGRST_JWT_SECRET: ${JWT_SECRET}
+      AUTH_JWT_SECRET: ${JWT_SECRET}
+      DATABASE_URL: postgres://supabase_storage_admin:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}
+      FILE_SIZE_LIMIT: 52428800
+      STORAGE_BACKEND: s3
+      TENANT_ID: stub
+      REGION: ${S3_REGION}
+      GLOBAL_S3_BUCKET: ${GLOBAL_S3_BUCKET}
+      GLOBAL_S3_ENDPOINT: ${GLOBAL_S3_ENDPOINT}
+      GLOBAL_S3_PROTOCOL: ${GLOBAL_S3_PROTOCOL}
+      GLOBAL_S3_FORCE_PATH_STYLE: "true"
+      AWS_ACCESS_KEY_ID: ${S3_ACCESS_KEY}
+      AWS_SECRET_ACCESS_KEY: ${S3_SECRET_KEY}
+      AWS_DEFAULT_REGION: ${S3_REGION}
+      ENABLE_IMAGE_TRANSFORMATION: "false"
+
+  # ---------------------------------------------------------------------------
+  # API gateway — exposes ONE Supabase origin (http://gateway:8000) and fans the
+  # /auth/v1, /rest/v1 and /storage/v1 prefixes out to the services above.
+  # The web apps reverse-proxy /supabase -> this gateway (same-origin, no CORS).
+  # ---------------------------------------------------------------------------
+  gateway:
+    image: nginx:1.27-alpine
+    container_name: labs-gateway
+    restart: unless-stopped
+    depends_on:
+      auth:
+        condition: service_started
+      rest:
+        condition: service_started
+      storage:
+        condition: service_started
+    volumes:
+      - ./docker/gateway/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8000/health"]
+      timeout: 5s
+      interval: 5s
+      retries: 10
+
+volumes:
+  db-data:

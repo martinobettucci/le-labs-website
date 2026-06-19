@@ -1,10 +1,10 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useData } from '../contexts/DataContext';
 import { useUserPreferences } from '../contexts/UserPreferencesContext';
 import ProjectTile from '../components/tiles/ProjectTile';
-import MetroTile from '../components/tiles/MetroTile';
+import { Project, LayoutProject } from '../types/data';
 import { ArrowRight } from 'lucide-react';
 
 const HomePage: React.FC = () => {
@@ -35,12 +35,12 @@ const HomePage: React.FC = () => {
   ];
   
   // Function to generate randomized layout pattern
-  const generateLayoutPattern = (projects) => {
+  const generateLayoutPattern = (projects: Project[]): LayoutProject[] => {
     // Randomize the starting point in the pattern
     const startPatternIndex = Math.floor(Math.random() * tilePatterns.length);
-    
+
     // Apply the pattern to projects
-    const result = [];
+    const result: LayoutProject[] = [];
     let patternIndex = startPatternIndex;
     let projectIndex = 0;
     
@@ -236,8 +236,8 @@ const HomePage: React.FC = () => {
           >
             <h2 className="font-heading font-bold mb-6">{homeData.layout?.[3].content.heading}</h2>
             <p className="text-xl md:text-2xl mb-8 opacity-90">{homeData.layout?.[3].content.description}</p>
-            <Link 
-              to={homeData.layout?.[3].content.buttonLink} 
+            <Link
+              to={homeData.layout?.[3].content.buttonLink ?? ''}
               className="inline-flex items-center px-6 py-3 bg-background text-white font-bold hover:bg-gray-800 transition-colors"
             >
               {homeData.layout?.[3].content.buttonText}

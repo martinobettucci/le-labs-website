@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { useData } from './DataContext';
 import { useUserPreferences } from './UserPreferencesContext';
-import { Project, ProjectUpdate } from '../types/data';
+import { ProjectUpdate } from '../types/data';
 import { createHash } from '../utils/hashUtils';
 
 interface Notification {

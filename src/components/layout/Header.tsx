@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { NavLink, Link } from 'react-router-dom';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { Menu } from 'lucide-react';
@@ -9,8 +9,7 @@ interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = ({ toggleMobileMenu }) => {
   const { scrollY } = useScroll();
-  const [scrolled, setScrolled] = useState(false);
-  
+
   // Transform properties based on scroll
   const backgroundColor = useTransform(
     scrollY,
@@ -23,15 +22,6 @@ const Header: React.FC<HeaderProps> = ({ toggleMobileMenu }) => {
     [0, 50],
     ['blur(0px)', 'blur(10px)']
   );
-  
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 10);
-    };
-    
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
 
   const navItems = [
     { path: '/', label: 'Home' },

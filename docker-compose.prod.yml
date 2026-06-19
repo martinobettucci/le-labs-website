@@ -1,0 +1,72 @@
+# =============================================================================
+# LE LABS — PRODUCTION override
+# =============================================================================
+# Same sovereign Supabase core, but:
+#   - Storage uses REAL external S3 (env), Auth uses REAL external SMTP (env)
+#   - No MinIO / no Inbucket containers
+#   - Both apps are built to static assets and served by nginx, which also
+#     reverse-proxies /supabase -> gateway (same-origin, no CORS)
+#   - The example projects are NOT seeded (SEED_EXAMPLES=false)
+#
+#   docker compose --env-file .env.prod -f docker-compose.yml -f docker-compose.prod.yml up -d --build
+# =============================================================================
+
+services:
+  gateway:
+    ports:
+      - "8000:8000"
+
+  # Apply schema + RLS + storage bucket/policies (no example seed in prod).
+  bootstrap:
+    build:
+      context: .
+      dockerfile: docker/bootstrap/Dockerfile
+    container_name: labs-bootstrap
+    depends_on:
+      db:
+        condition: service_healthy
+      storage:
+        condition: service_healthy
+    environment:
+      POSTGRES_HOST: ${POSTGRES_HOST}
+      POSTGRES_PORT: ${POSTGRES_PORT}
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      SEED_EXAMPLES: ${SEED_EXAMPLES}
+    volumes:
+      - ./supabase/migrations:/migrations:ro
+      - ./supabase/seed:/seed:ro
+    restart: "no"
+
+  # --- Public website (static build served by nginx) ------------------------
+  website:
+    build:
+      context: .
+      dockerfile: Dockerfile.prod
+      args:
+        VITE_SUPABASE_ANON_KEY: ${VITE_SUPABASE_ANON_KEY}
+    container_name: labs-website
+    restart: unless-stopped
+    depends_on:
+      gateway:
+        condition: service_started
+    ports:
+      - "8080:80"
+
+  # --- Back-office (static build served by nginx), from the sibling repo -----
+  backoffice:
+    build:
+      context: ../le-labs-backoffice
+      dockerfile: Dockerfile.prod
+      args:
+        VITE_SUPABASE_ANON_KEY: ${VITE_SUPABASE_ANON_KEY}
+    container_name: labs-backoffice
+    restart: unless-stopped
+    depends_on:
+      gateway:
+        condition: service_started
+    ports:
+      - "8081:80"
+
+volumes:
+  db-data:

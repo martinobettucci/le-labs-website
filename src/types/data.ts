@@ -35,6 +35,8 @@ export interface Project {
   links?: ProjectLinks;
 }
 
+export type LayoutProject = Project & { colSpan: number };
+
 export interface NewsItem {
   id: string;
   hash: string;
@@ -48,7 +50,7 @@ export interface NewsItem {
 
 export interface PageSection {
   type: string;
-  content: Record<string, any>;
+  content: Record<string, string>;
   styles?: Record<string, string>;
 }
 
@@ -57,7 +59,7 @@ export interface Page {
   subtitle?: string;
   description: string;
   layout?: PageSection[];
-  content?: any;
+  content?: string;
 }
 
 export interface LabsData {

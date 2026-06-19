@@ -1,0 +1,167 @@
+# =============================================================================
+# LE LABS — DEV / DEMO override
+# =============================================================================
+# Adds the dev-only sovereign infrastructure (MinIO for S3, Inbucket for email),
+# the schema/seed bootstrap, and both web apps in Vite dev mode (HMR).
+#
+#   docker compose --env-file .env.dev -f docker-compose.yml -f docker-compose.dev.yml up -d --build
+# =============================================================================
+
+services:
+  db:
+    ports:
+      - "5432:5432"
+
+  gateway:
+    ports:
+      - "8000:8000"
+
+  # --- MinIO: sovereign S3-compatible object store --------------------------
+  minio:
+    image: minio/minio:latest
+    container_name: labs-minio
+    restart: unless-stopped
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+    healthcheck:
+      test: ["CMD", "mc", "ready", "local"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    volumes:
+      - minio-data:/data
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+
+  # Create the backing S3 bucket used by supabase-storage.
+  minio-createbucket:
+    image: minio/mc:latest
+    container_name: labs-minio-init
+    depends_on:
+      minio:
+        condition: service_healthy
+    entrypoint: >
+      /bin/sh -ec "
+      mc alias set supa http://minio:9000 ${MINIO_ROOT_USER} ${MINIO_ROOT_PASSWORD} &&
+      mc mb --ignore-existing supa/${GLOBAL_S3_BUCKET} &&
+      echo 'bucket ready: ${GLOBAL_S3_BUCKET}'
+      "
+    restart: "no"
+
+  storage:
+    depends_on:
+      db:
+        condition: service_healthy
+      rest:
+        condition: service_started
+      minio:
+        condition: service_healthy
+      minio-createbucket:
+        condition: service_completed_successfully
+
+  # --- Inbucket: sovereign SMTP catch-all + webmail -------------------------
+  inbucket:
+    image: inbucket/inbucket:latest
+    container_name: labs-inbucket
+    restart: unless-stopped
+    ports:
+      - "9110:9000"   # web UI  -> http://localhost:9110
+      - "2500:2500"   # SMTP
+    healthcheck:
+      test: ["CMD", "sh", "-c", "wget -qO- http://localhost:9000/ >/dev/null 2>&1 || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  # --- Bootstrap: apply migrations + (dev) seed example projects ------------
+  bootstrap:
+    build:
+      context: .
+      dockerfile: docker/bootstrap/Dockerfile
+    container_name: labs-bootstrap
+    depends_on:
+      db:
+        condition: service_healthy
+      storage:
+        condition: service_healthy
+    environment:
+      POSTGRES_HOST: ${POSTGRES_HOST}
+      POSTGRES_PORT: ${POSTGRES_PORT}
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      SEED_EXAMPLES: ${SEED_EXAMPLES}
+    volumes:
+      - ./supabase/migrations:/migrations:ro
+      - ./supabase/seed:/seed:ro
+    restart: "no"
+
+  # --- Public website (Vite dev / HMR) --------------------------------------
+  website:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: labs-website
+    restart: unless-stopped
+    depends_on:
+      gateway:
+        condition: service_started
+    environment:
+      SUPABASE_GATEWAY_URL: ${SUPABASE_GATEWAY_URL}
+      VITE_SUPABASE_ANON_KEY: ${VITE_SUPABASE_ANON_KEY}
+      CHOKIDAR_USEPOLLING: "true"
+    volumes:
+      - .:/app
+      - website-node-modules:/app/node_modules
+    ports:
+      - "5173:5173"
+
+  # --- Back-office (Vite dev / HMR), built from the sibling repo -------------
+  backoffice:
+    build:
+      context: ../le-labs-backoffice
+      dockerfile: Dockerfile.dev
+    container_name: labs-backoffice
+    restart: unless-stopped
+    depends_on:
+      gateway:
+        condition: service_started
+    environment:
+      SUPABASE_GATEWAY_URL: ${SUPABASE_GATEWAY_URL}
+      VITE_SUPABASE_ANON_KEY: ${VITE_SUPABASE_ANON_KEY}
+      CHOKIDAR_USEPOLLING: "true"
+    volumes:
+      - ../le-labs-backoffice:/app
+      - backoffice-node-modules:/app/node_modules
+    ports:
+      - "5174:5173"
+
+  # --- Playwright E2E (filmed). Run on demand:
+  #   docker compose --env-file .env.dev -f docker-compose.yml -f docker-compose.dev.yml --profile e2e run --rm e2e
+  e2e:
+    build:
+      context: ./e2e
+      dockerfile: Dockerfile
+    container_name: labs-e2e
+    profiles: ["e2e"]
+    depends_on:
+      website:
+        condition: service_started
+      backoffice:
+        condition: service_started
+    environment:
+      WEBSITE_URL: http://website:5173
+      BACKOFFICE_URL: http://backoffice:5173
+      INBUCKET_URL: http://inbucket:9000
+      SUPABASE_URL: http://gateway:8000
+    volumes:
+      - ./e2e/tests:/e2e/tests:ro
+      - ./e2e/artifacts:/e2e/artifacts
+
+volumes:
+  db-data:
+  minio-data:
+  website-node-modules:
+  backoffice-node-modules:

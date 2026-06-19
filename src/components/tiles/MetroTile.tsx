@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { TileStyles } from '../../types/data';
@@ -13,7 +13,6 @@ interface MetroTileProps {
   onClick?: () => void;
   notification?: boolean;
   children?: React.ReactNode;
-  backContent?: React.ReactNode; // Content for the back of the tile
   image?: string; // Optional image to show
   links?: React.ReactNode; // Links content to show
 	size?: 'small' | 'medium' | 'large' | 'wide';
@@ -34,7 +33,6 @@ const MetroTile: React.FC<MetroTileProps> = ({
   onClick,
   notification = false,
   children,
-  backContent,
   image,
   links,
 	size,
@@ -48,9 +46,12 @@ const MetroTile: React.FC<MetroTileProps> = ({
   const flipButtonRef = useRef<HTMLButtonElement>(null);
   
   // Determine which faces are available
-  const availableFaces: FaceType[] = ['details'];
-  if (image) availableFaces.push('image');
-  if (links) availableFaces.push('links');
+  const availableFaces = useMemo<FaceType[]>(() => {
+    const faces: FaceType[] = ['details'];
+    if (image) faces.push('image');
+    if (links) faces.push('links');
+    return faces;
+  }, [image, links]);
   
   // Select a random initial face from available options
   const getRandomInitialFace = (): FaceType => {

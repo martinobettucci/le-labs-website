@@ -22,3 +22,13 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Sandbox/corporate proxy CA certs (do not commit)
+docker/extra-cas/*.crt
+e2e/extra-cas/*.crt
+
+# Playwright generated output
+e2e/artifacts/
+e2e/node_modules/
+e2e/test-results/
+e2e/playwright-report/

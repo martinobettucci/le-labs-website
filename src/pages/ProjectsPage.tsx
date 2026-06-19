@@ -3,13 +3,14 @@ import { motion } from 'framer-motion';
 import { useData } from '../contexts/DataContext';
 import { useUserPreferences } from '../contexts/UserPreferencesContext';
 import ProjectTile from '../components/tiles/ProjectTile';
+import { Project, LayoutProject } from '../types/data';
 import { Filter, Star } from 'lucide-react';
 
 const ProjectsPage: React.FC = () => {
   const { data, loading } = useData();
   const { preferences, isFollowing } = useUserPreferences();
   
-  const [filteredProjects, setFilteredProjects] = useState<any[]>([]);
+  const [filteredProjects, setFilteredProjects] = useState<Project[]>([]);
   const [activeFilter, setActiveFilter] = useState<string>('all');
   const [activeStatus, setActiveStatus] = useState<string>('all');
   const [showOnlyFollowed, setShowOnlyFollowed] = useState(false);
@@ -55,11 +56,11 @@ const ProjectsPage: React.FC = () => {
   ];
   
   // Function to generate randomized layout pattern
-	const generateLayoutPattern = (projects) => {
+	const generateLayoutPattern = (projects: Project[]): LayoutProject[] => {
 	  // Pour l'effet random, tu peux shuffle tilePatterns ou projects, mais PAS les deux en même temps sinon tu risques de mélanger la logique.
 	  const shuffledPatterns = [...tilePatterns].sort(() => Math.random() - 0.5);
-	
-	  const result = [];
+
+	  const result: LayoutProject[] = [];
 	  let projectIndex = 0;
 	  let patternIndex = 0;
 	
@@ -83,7 +84,8 @@ const ProjectsPage: React.FC = () => {
   // Check for new updates in followed projects
   const hasNewUpdates = (projectId: string) => {
     if (!isFollowing(projectId)) return false;
-    
+    if (!data) return false;
+
     const project = data.projects.find(p => p.id === projectId);
     const followedProject = preferences.followedProjects.find(fp => fp.id === projectId);
     

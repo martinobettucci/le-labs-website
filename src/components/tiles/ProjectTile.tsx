@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { motion } from 'framer-motion';
-import { Project } from '../../types/data';
+import { LayoutProject } from '../../types/data';
 import { useUserPreferences } from '../../contexts/UserPreferencesContext';
 import { Star, Clock, CheckCircle, AlertTriangle, Github, ExternalLink, Play, FileText } from 'lucide-react';
 import MetroTile from './MetroTile';
 
 interface ProjectTileProps {
-  project: Project;
+  project: LayoutProject;
   hasNewUpdates?: boolean;
 }
 

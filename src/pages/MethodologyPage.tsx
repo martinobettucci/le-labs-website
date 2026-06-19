@@ -113,12 +113,14 @@ const MethodologyPage: React.FC = () => {
   ];
   
   // Generate randomized layout for methodology tiles
-  const generateDynamicLayout = (tiles) => {
+  type MethodologyTile = (typeof methodologyTiles)[number];
+  type LayoutTile = MethodologyTile & { colSpan: number };
+  const generateDynamicLayout = (tiles: MethodologyTile[]): LayoutTile[] => {
     // Randomize the starting point in the pattern
     const startPatternIndex = Math.floor(Math.random() * tilePatterns.length);
-    
+
     // Apply the pattern to tiles
-    const result = [];
+    const result: LayoutTile[] = [];
     let patternIndex = startPatternIndex;
     let tileIndex = 0;
     

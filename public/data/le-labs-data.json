@@ -3,6 +3,38 @@
     "lastUpdated": "2025-04-12T08:00:00Z",
     "version": "1.0.0"
   },
+  "news": [
+    {
+      "id": "news-001",
+      "hash": "news-001-a1b2c3",
+      "date": "2025-04-12T08:00:00Z",
+      "title": "LE LABS opens its sovereign research stack",
+      "summary": "Our experiments now run on a fully self-hosted, sovereign infrastructure — from database to object storage.",
+      "content": "We have migrated LE LABS to a fully sovereign stack: self-hosted Postgres, authentication, REST and S3-compatible object storage. This gives our research full data ownership and reproducible environments from development to production.",
+      "image": "https://images.pexels.com/photos/1148820/pexels-photo-1148820.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+      "tileStyles": { "background": "#23468C", "color": "#FFFFFF" }
+    },
+    {
+      "id": "news-002",
+      "hash": "news-002-d4e5f6",
+      "date": "2025-04-09T10:30:00Z",
+      "title": "Spatial Computing Interface reaches 95% gesture accuracy",
+      "summary": "The core gesture-recognition system now hits 95% accuracy in controlled environments.",
+      "content": "Our Spatial Computing Interface research crossed an important milestone this week, with the core gesture-recognition system reaching 95% accuracy in controlled environments. Field testing begins next month.",
+      "image": "https://images.pexels.com/photos/3861969/pexels-photo-3861969.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+      "tileStyles": { "background": "#238C33", "color": "#FFFFFF" }
+    },
+    {
+      "id": "news-003",
+      "hash": "news-003-g7h8i9",
+      "date": "2025-03-16T14:00:00Z",
+      "title": "Adaptive Color Systems released as open source",
+      "summary": "The Adaptive Color Systems project is complete and its library is now open source.",
+      "content": "We are happy to announce that the Adaptive Color Systems project is now complete. The final report has been published and the source code released as an open-source library for the community.",
+      "image": "https://images.pexels.com/photos/1209843/pexels-photo-1209843.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+      "tileStyles": { "background": "#D9CF4A", "color": "#0D0D0D" }
+    }
+  ],
   "pages": {
     "home": {
       "title": "LE LABS",
