@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { TileStyles } from '../../types/data';
 import { useUserPreferences } from '../../contexts/UserPreferencesContext';
 import { useTilt } from '../../hooks/useTilt';
+import { formatRelativeTime } from '../../utils/relativeTime';
 import { RotateCw } from 'lucide-react';
 
 interface MetroTileProps {
@@ -18,16 +19,13 @@ interface MetroTileProps {
   links?: React.ReactNode; // Links content to show
   size?: 'small' | 'medium' | 'large' | 'wide';
   onFlip?: () => void; // New callback for manual flip
-  liveItems?: string[]; // Optional live-tile ticker (e.g. recent updates)
+  liveItems?: { text: string; date?: string }[]; // Live-tile ticker (recent updates)
 }
 
 // Three face types
 type FaceType = 'details' | 'image' | 'links';
 
-// Transition types (entrance)
-type TransitionType = 'fade' | 'slide' | 'scale' | 'kaleidoscope' | 'rainbow' | 'slidingDoors' | 'zoom' | 'flip';
-
-// Stable hash so per-tile choices (ambient effect, entrance) are deterministic.
+// Stable hash so per-tile choices (ambient effect, initial face) are deterministic.
 const hashString = (s: string): number => {
   let h = 0;
   for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) >>> 0;
@@ -68,17 +66,9 @@ const MetroTile: React.FC<MetroTileProps> = ({
   );
   const [ambientColor, setAmbientColor] = useState<string>(tileStyles.background);
 
-  // Entrance transition + always-on ambient effect, chosen deterministically per
-  // tile (no re-randomization on every render). This "finishes" the previously
-  // suspended effect classes by wiring a curated subset in for good.
-  const transitionType = useMemo<TransitionType>(() => {
-    if (reducedMotion) return 'fade';
-    const all: TransitionType[] = ['fade', 'slide', 'scale', 'zoom', 'flip', 'kaleidoscope', 'rainbow', 'slidingDoors'];
-    const forced = typeof localStorage !== 'undefined' ? localStorage.getItem('forceTransition') : null;
-    if (forced && all.includes(forced as TransitionType)) return forced as TransitionType;
-    return all[hashString(title + ':t') % all.length];
-  }, [reducedMotion, title]);
-
+  // Always-on ambient effect, chosen deterministically per tile (no
+  // re-randomization on every render). This "finishes" the previously suspended
+  // effect classes by wiring a curated subset in for good.
   const ambientClass = useMemo(() => {
     if (reducedMotion) return '';
     // Curated, tasteful subset that layers well over the accent colours.
@@ -204,33 +194,6 @@ const MetroTile: React.FC<MetroTileProps> = ({
     wide: 'h-56 md:h-56',
   };
 
-  // Entrance animation variants
-  const getVariants = () => {
-    const hoverTapAnimations = {
-      hover: { scale: 1.015, transition: { duration: 0.3 } },
-      tap: { scale: 0.97, transition: { duration: 0.1 } },
-    };
-    switch (transitionType) {
-      case 'slide':
-        return { initial: { x: -100, opacity: 0 }, animate: { x: 0, opacity: 1, transition: { type: 'spring', stiffness: 80, damping: 20 } }, ...hoverTapAnimations };
-      case 'scale':
-        return { initial: { scale: 0.8, opacity: 0 }, animate: { scale: 1, opacity: 1, transition: { type: 'spring', stiffness: 200, damping: 25 } }, ...hoverTapAnimations };
-      case 'kaleidoscope':
-        return { initial: { rotate: -10, scale: 0.9, opacity: 0 }, animate: { rotate: 0, scale: 1, opacity: 1, transition: { type: 'spring', stiffness: 150, damping: 20 } }, ...hoverTapAnimations };
-      case 'rainbow':
-        return { initial: { opacity: 0, filter: 'hue-rotate(0deg) brightness(1.2)' }, animate: { opacity: 1, filter: ['hue-rotate(0deg) brightness(1.2)', 'hue-rotate(180deg) brightness(1)', 'hue-rotate(360deg) brightness(1.2)'], transition: { filter: { duration: 1.2, times: [0, 0.5, 1] }, opacity: { duration: 0.5 } } }, ...hoverTapAnimations };
-      case 'slidingDoors':
-        return { initial: { opacity: 0, clipPath: 'polygon(0 0, 0 0, 0 100%, 0% 100%)' }, animate: { opacity: 1, clipPath: ['polygon(0 0, 0 0, 0 100%, 0% 100%)', 'polygon(0 0, 50% 0, 50% 100%, 0 100%)', 'polygon(0 0, 100% 0, 100% 100%, 0 100%)'], transition: { clipPath: { duration: 1.2, times: [0, 0.5, 1], ease: 'easeInOut' }, opacity: { duration: 0.5 } } }, ...hoverTapAnimations };
-      case 'zoom':
-        return { initial: { scale: 1.5, opacity: 0, filter: 'blur(10px)' }, animate: { scale: 1, opacity: 1, filter: 'blur(0px)', transition: { duration: 1.0, ease: [0.16, 1, 0.3, 1] } }, ...hoverTapAnimations };
-      case 'flip':
-        return { initial: { opacity: 0, rotateX: 90 }, animate: { opacity: 1, rotateX: 0, transition: { duration: 0.8, ease: 'easeOut' } }, ...hoverTapAnimations };
-      case 'fade':
-      default:
-        return { initial: { opacity: 0 }, animate: { opacity: 1, transition: { duration: 0.8 } }, ...hoverTapAnimations };
-    }
-  };
-
   // Notification animation
   const notificationVariants = {
     initial: { opacity: 0 },
@@ -272,16 +235,21 @@ const MetroTile: React.FC<MetroTileProps> = ({
             <span className="w-1.5 h-1.5 rounded-full bg-current animate-pulse shrink-0" />
             <div className="relative flex-1 h-5">
               <AnimatePresence mode="wait">
-                <motion.span
+                <motion.div
                   key={liveIndex}
-                  className="absolute inset-0 truncate"
+                  className="absolute inset-0 flex items-center"
                   initial={{ y: 14, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
                   exit={{ y: -14, opacity: 0 }}
                   transition={{ duration: 0.45 }}
                 >
-                  {liveItems[liveIndex % liveItems.length]}
-                </motion.span>
+                  <span className="truncate">{liveItems[liveIndex % liveItems.length].text}</span>
+                  {liveItems[liveIndex % liveItems.length].date && (
+                    <span className="ml-auto pl-2 shrink-0 opacity-60">
+                      {formatRelativeTime(liveItems[liveIndex % liveItems.length].date as string)}
+                    </span>
+                  )}
+                </motion.div>
               </AnimatePresence>
             </div>
           </div>
@@ -322,11 +290,8 @@ const MetroTile: React.FC<MetroTileProps> = ({
       ref={tileRef}
       className={`metro-tile metro-shine ambient-light-tile w-full ${sizeClasses[size || 'large']} cursor-pointer ${ambientClass} perspective-1000 relative`}
       style={{ backgroundColor: tileStyles.background, color: tileStyles.color, ...getAmbientShadowStyle() }}
-      variants={getVariants()}
-      initial="initial"
-      animate="animate"
-      whileHover="hover"
-      whileTap="tap"
+      whileHover={{ scale: 1.015 }}
+      whileTap={{ scale: 0.97 }}
       onClick={handleTileClick}
       onPointerMove={onPointerMove}
       onPointerLeave={onPointerLeave}

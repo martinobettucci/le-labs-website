@@ -1,5 +1,4 @@
 import React from 'react';
-import { motion } from 'framer-motion';
 import { LayoutProject } from '../../types/data';
 import { useUserPreferences } from '../../contexts/UserPreferencesContext';
 import { Star, Clock, CheckCircle, AlertTriangle, Github, ExternalLink, Play, FileText } from 'lucide-react';
@@ -122,69 +121,10 @@ const ProjectTile: React.FC<ProjectTileProps> = ({ project, hasNewUpdates = fals
     );
   };
 
-  // Generate random animation variants for each tile
-  const getRandomAnimation = () => {
-    const animations = [
-      {
-        initial: { opacity: 0, y: 30 },
-        animate: {
-          opacity: 1,
-          y: 0,
-          transition: {
-            duration: 0.8,
-            type: 'spring',
-            stiffness: 80,
-          },
-        },
-      },
-      {
-        initial: { opacity: 0, scale: 0.9 },
-        animate: {
-          opacity: 1,
-          scale: 1,
-          transition: {
-            duration: 0.7,
-            type: 'spring',
-            stiffness: 150,
-            damping: 20,
-          },
-        },
-      },
-      {
-        initial: { opacity: 0, x: -30 },
-        animate: {
-          opacity: 1,
-          x: 0,
-          transition: {
-            duration: 0.7,
-            type: 'spring',
-            stiffness: 120,
-          },
-        },
-      },
-      {
-        initial: { opacity: 0 },
-        animate: {
-          opacity: 1,
-          transition: { duration: 0.8 },
-        },
-      },
-    ];
-
-    const random = Math.floor(Math.random() * animations.length);
-    return animations[random];
-  };
-
-  const animation = getRandomAnimation();
-
+  // Entrance is driven by the parent grid's cascade (Windows-8 wave); the tile
+  // itself only does hover/tap + pointer tilt.
   return (
-    <motion.div
-      initial={animation.initial}
-      animate={animation.animate}
-      //whileHover={{ scale: 1.02, transition: { duration: 0.3 } }}
-      className="h-full"
-    >
-      <div className="h-full">
+    <div className="h-full">
         <MetroTile
           title={project.title}
           description={project.description}
@@ -194,7 +134,7 @@ const ProjectTile: React.FC<ProjectTileProps> = ({ project, hasNewUpdates = fals
           image={project.image}
           links={renderProjectLinks()}
           size={size} // ✅ apply size
-          liveItems={(project.updates || []).map((u) => u.title)}
+          liveItems={(project.updates || []).map((u) => ({ text: u.title, date: u.date }))}
         >
           <div>
             <div className="flex justify-between items-start mb-2">
@@ -230,8 +170,7 @@ const ProjectTile: React.FC<ProjectTileProps> = ({ project, hasNewUpdates = fals
             </div>
           </div>
         </MetroTile>
-      </div>
-    </motion.div>
+    </div>
   );
 };
 

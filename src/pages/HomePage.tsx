@@ -79,24 +79,24 @@ const HomePage: React.FC = () => {
     return project.updates.some(update => new Date(update.date) > lastChecked);
   };
 
-  // Animation variants
+  // Windows-8 style cascade: tiles pop in one-by-one (scale + slight rotate).
   const containerVariants = {
-    hidden: { opacity: 0 },
+    hidden: { opacity: 1 },
     visible: {
       opacity: 1,
-      transition: {
-        staggerChildren: 0.1
-      }
-    }
+      transition: { staggerChildren: 0.06, delayChildren: 0.08 },
+    },
   };
-  
+
   const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { 
-      opacity: 1, 
+    hidden: { opacity: 0, scale: 0.6, y: 24, rotate: -3 },
+    visible: {
+      opacity: 1,
+      scale: 1,
       y: 0,
-      transition: { duration: 0.6 }
-    }
+      rotate: 0,
+      transition: { type: 'spring', stiffness: 260, damping: 22 },
+    },
   };
 
   return (
