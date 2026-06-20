@@ -1,8 +1,9 @@
 import React, { useEffect, useState, useRef, useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { motion, useSpring } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { TileStyles } from '../../types/data';
 import { useUserPreferences } from '../../contexts/UserPreferencesContext';
+import { useTilt } from '../../hooks/useTilt';
 import { RotateCw } from 'lucide-react';
 
 interface MetroTileProps {
@@ -17,6 +18,7 @@ interface MetroTileProps {
   links?: React.ReactNode; // Links content to show
   size?: 'small' | 'medium' | 'large' | 'wide';
   onFlip?: () => void; // New callback for manual flip
+  liveItems?: string[]; // Optional live-tile ticker (e.g. recent updates)
 }
 
 // Three face types
@@ -44,6 +46,7 @@ const MetroTile: React.FC<MetroTileProps> = ({
   links,
   size,
   onFlip,
+  liveItems,
 }) => {
   const { preferences } = useUserPreferences();
   const reducedMotion = preferences.reducedMotion;
@@ -84,23 +87,15 @@ const MetroTile: React.FC<MetroTileProps> = ({
   }, [reducedMotion, title]);
 
   // --- Win8 "Metro" tilt: the tile leans in 3D toward the pointer -----------
-  const tiltX = useSpring(0, { stiffness: 300, damping: 28, mass: 0.4 });
-  const tiltY = useSpring(0, { stiffness: 300, damping: 28, mass: 0.4 });
+  const { rotateX: tiltX, rotateY: tiltY, onPointerMove, onPointerLeave } = useTilt(16);
 
-  const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
-    if (reducedMotion) return;
-    const el = tileRef.current;
-    if (!el) return;
-    const r = el.getBoundingClientRect();
-    const px = (e.clientX - r.left) / r.width - 0.5; // -0.5 .. 0.5
-    const py = (e.clientY - r.top) / r.height - 0.5;
-    tiltY.set(px * 16);
-    tiltX.set(-py * 16);
-  };
-  const resetTilt = () => {
-    tiltX.set(0);
-    tiltY.set(0);
-  };
+  // Live-tile ticker: cycle through recent items (e.g. project updates).
+  const [liveIndex, setLiveIndex] = useState(0);
+  useEffect(() => {
+    if (!liveItems || liveItems.length <= 1 || reducedMotion) return;
+    const id = setInterval(() => setLiveIndex((i) => (i + 1) % liveItems.length), 3500);
+    return () => clearInterval(id);
+  }, [liveItems, reducedMotion]);
 
   // Update ambient color based on current face content
   useEffect(() => {
@@ -270,7 +265,28 @@ const MetroTile: React.FC<MetroTileProps> = ({
         <h3 className="metro-tile-headline mb-2">{title}</h3>
         {description && <p className="text-sm md:text-base opacity-90">{description}</p>}
       </div>
-      {children}
+      <div>
+        {children}
+        {liveItems && liveItems.length > 0 && (
+          <div className="mt-3 flex items-center gap-2 h-5 overflow-hidden text-2xs uppercase tracking-wider opacity-90">
+            <span className="w-1.5 h-1.5 rounded-full bg-current animate-pulse shrink-0" />
+            <div className="relative flex-1 h-5">
+              <AnimatePresence mode="wait">
+                <motion.span
+                  key={liveIndex}
+                  className="absolute inset-0 truncate"
+                  initial={{ y: 14, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  exit={{ y: -14, opacity: 0 }}
+                  transition={{ duration: 0.45 }}
+                >
+                  {liveItems[liveIndex % liveItems.length]}
+                </motion.span>
+              </AnimatePresence>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 
@@ -312,8 +328,8 @@ const MetroTile: React.FC<MetroTileProps> = ({
       whileHover="hover"
       whileTap="tap"
       onClick={handleTileClick}
-      onPointerMove={handlePointerMove}
-      onPointerLeave={resetTilt}
+      onPointerMove={onPointerMove}
+      onPointerLeave={onPointerLeave}
     >
       {/* Inner layer carries the pointer tilt so it composes with the entrance/hover. */}
       <motion.div className="absolute inset-0 preserve-3d" style={{ rotateX: tiltX, rotateY: tiltY }}>

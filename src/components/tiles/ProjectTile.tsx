@@ -194,6 +194,7 @@ const ProjectTile: React.FC<ProjectTileProps> = ({ project, hasNewUpdates = fals
           image={project.image}
           links={renderProjectLinks()}
           size={size} // ✅ apply size
+          liveItems={(project.updates || []).map((u) => u.title)}
         >
           <div>
             <div className="flex justify-between items-start mb-2">

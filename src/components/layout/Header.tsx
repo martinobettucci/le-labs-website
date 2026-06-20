@@ -53,12 +53,14 @@ const Header: React.FC<HeaderProps> = ({ toggleMobileMenu }) => {
           <ul className="flex space-x-6">
             {navItems.map((item) => (
               <li key={item.path}>
-                <NavLink 
+                <NavLink
                   to={item.path}
-                  className={({ isActive }) => 
-                    isActive 
-                      ? 'text-highlight font-medium' 
-                      : 'text-white hover:text-highlight transition-colors'
+                  className={({ isActive }) =>
+                    `metro-nav-link ${
+                      isActive
+                        ? 'metro-nav-link-active text-highlight font-medium'
+                        : 'text-white hover:text-highlight transition-colors'
+                    }`
                   }
                   end={item.path === '/'}
                 >
