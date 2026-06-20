@@ -63,6 +63,19 @@
   .preserve-3d { transform-style: preserve-3d; }
   .backface-hidden { backface-visibility: hidden; }
   .rotate-y-180 { transform: rotateY(180deg); }
+
+  /* Metro "shine" — a diagonal light sweep across the tile on hover. */
+  .metro-shine::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 20;
+    background: linear-gradient(115deg, transparent 32%, rgba(255, 255, 255, 0.22) 50%, transparent 68%);
+    transform: translateX(-160%);
+    transition: transform 0.85s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  .metro-shine:hover::after { transform: translateX(160%); }
 }
 
 /* ========================================

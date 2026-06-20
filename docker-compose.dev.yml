@@ -103,6 +103,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.dev
+    image: le-labs-website-dev
     container_name: labs-website
     restart: unless-stopped
     depends_on:
@@ -123,6 +124,7 @@ services:
     build:
       context: ../le-labs-backoffice
       dockerfile: Dockerfile.dev
+    image: le-labs-backoffice-dev
     container_name: labs-backoffice
     restart: unless-stopped
     depends_on:

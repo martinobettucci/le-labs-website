@@ -45,6 +45,7 @@ services:
       dockerfile: Dockerfile.prod
       args:
         VITE_SUPABASE_ANON_KEY: ${VITE_SUPABASE_ANON_KEY}
+    image: le-labs-website-prod
     container_name: labs-website
     restart: unless-stopped
     depends_on:
@@ -60,6 +61,7 @@ services:
       dockerfile: Dockerfile.prod
       args:
         VITE_SUPABASE_ANON_KEY: ${VITE_SUPABASE_ANON_KEY}
+    image: le-labs-backoffice-prod
     container_name: labs-backoffice
     restart: unless-stopped
     depends_on:
